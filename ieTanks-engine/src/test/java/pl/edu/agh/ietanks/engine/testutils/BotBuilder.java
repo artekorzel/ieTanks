@@ -4,7 +4,7 @@ import java.util.ArrayDeque;
 import java.util.Queue;
 
 import pl.edu.agh.ietanks.engine.api.Action;
-import pl.edu.agh.ietanks.engine.api.Board;
+import pl.edu.agh.ietanks.engine.api.GameplayBoardView;
 import pl.edu.agh.ietanks.engine.api.Bot;
 import pl.edu.agh.ietanks.engine.simple.actions.NoOperation;
 
@@ -16,7 +16,7 @@ public class BotBuilder {
             final Queue<Action> actionQueue = new ArrayDeque<>(Lists.newArrayList(actions));
 
             @Override
-            public Action performAction(Board currentBoard) {
+            public Action performAction(GameplayBoardView currentBoard) {
                 if(actionQueue.isEmpty()) {
                     return new NoOperation();
                 }

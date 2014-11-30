@@ -1,10 +1,14 @@
-from pl.edu.agh.ietanks.engine.simple.actions import *
-from pl.edu.agh.ietanks.engine.api import Bot,Board
-from pl.edu.agh.ietanks.engine.api.Board import *
+from pl.edu.agh.ietanks.gameplay.bot.api import *
 
 class MyBot(Bot):
-    def __init__(self):
-        pass
+    def __init__(self, id):
+        Bot.__init__(self, id)
 
-    def performAction(self,board):
-        return Move(Board.Direction.Right,1)
+    def performAction(self, board):
+        tankIds = board.tankIds()
+        myPosition = self.getMyPosition(board)
+        wantedPosition = Position(myPosition.fromTop(), myPosition.fromLeft() + 1)
+        if board.isAccessibleForTank(wantedPosition):
+            return Move(MoveDirection.East)
+        else:
+            return Move(MoveDirection.West)

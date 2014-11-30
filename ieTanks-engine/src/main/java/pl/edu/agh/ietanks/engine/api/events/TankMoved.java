@@ -1,16 +1,17 @@
 package pl.edu.agh.ietanks.engine.api.events;
 
-import pl.edu.agh.ietanks.engine.api.Board;
+
+import pl.edu.agh.ietanks.engine.api.Direction;
 
 /**
  * Indicates that a tank has moved.
  */
 public class TankMoved implements Event {
     private final int tankId;
-    private final Board.Direction direction;
+    private final Direction direction;
     private final int step;
 
-    public TankMoved(int tankId, Board.Direction direction, int step) {
+    public TankMoved(int tankId, Direction direction, int step) {
         this.tankId = tankId;
         this.direction = direction;
         this.step = step;
@@ -20,12 +21,12 @@ public class TankMoved implements Event {
         return tankId;
     }
 
-    public Board.Direction direction() {
+    public Direction direction() {
         return direction;
     }
-    
+
     public int step() {
-    	return step;
+        return step;
     }
 
     @Override
@@ -37,16 +38,16 @@ public class TankMoved implements Event {
                 '}';
     }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((direction == null) ? 0 : direction.hashCode());
-		result = prime * result + step;
-		result = prime * result + tankId;
-		return result;
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result
+                + ((direction == null) ? 0 : direction.hashCode());
+        result = prime * result + step;
+        result = prime * result + tankId;
+        return result;
+    }
 
     @Override
     public boolean equals(Object o) {
