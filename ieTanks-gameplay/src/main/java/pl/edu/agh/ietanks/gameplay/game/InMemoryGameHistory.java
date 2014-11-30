@@ -1,8 +1,8 @@
 package pl.edu.agh.ietanks.gameplay.game;
 
+import org.springframework.stereotype.Service;
 import pl.edu.agh.ietanks.gameplay.game.api.Game;
 import pl.edu.agh.ietanks.gameplay.game.api.GameHistory;
-import pl.edu.agh.ietanks.gameplay.game.innerapi.GameHistoryStorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class InMemoryGameHistory implements GameHistory, GameHistoryStorage {
+@Service
+public class InMemoryGameHistory implements GameHistory {
 
     private Map<UUID, Game> historyGames = new ConcurrentHashMap<UUID, Game>();
 
@@ -23,7 +24,7 @@ public class InMemoryGameHistory implements GameHistory, GameHistoryStorage {
     }
 
     @Override
-    public Game getGame(int gameId) {
+    public Game getGame(UUID gameId) {
         return historyGames.get(gameId);
     }
 

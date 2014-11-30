@@ -5,6 +5,6 @@ import java.util.UUID;
 
 public interface GameHistory {
     public List<UUID> getFinishedGamesIds();
-
-    public Game getGame(int gameId);
+    public void storeFinishedGame(Game game);
+    public Game getGame(UUID gameId);
 }
