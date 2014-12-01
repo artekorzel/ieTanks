@@ -5,6 +5,6 @@ import pl.edu.agh.ietanks.engine.api.Action;
 /**
  * Represents empty request from the bot to the game engine.
  */
-public class NoOperation implements Action{
+public class NoOperation implements Action {
 
 }

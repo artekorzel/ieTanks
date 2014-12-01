@@ -1,31 +1,31 @@
 package pl.edu.agh.ietanks.engine.api.events;
 
-import pl.edu.agh.ietanks.engine.api.Board;
+import pl.edu.agh.ietanks.engine.api.GameplayBoardView;
 
 /**
  * Indicates that a tank has moved.
  */
 public class TankMoved implements Event {
-    private final int tankId;
-    private final Board.Direction direction;
+    private final String tankId;
+    private final GameplayBoardView.Direction direction;
     private final int step;
 
-    public TankMoved(int tankId, Board.Direction direction, int step) {
+    public TankMoved(String tankId, GameplayBoardView.Direction direction, int step) {
         this.tankId = tankId;
         this.direction = direction;
         this.step = step;
     }
 
-    public int tankId() {
+    public String tankId() {
         return tankId;
     }
 
-    public Board.Direction direction() {
+    public GameplayBoardView.Direction direction() {
         return direction;
     }
-    
+
     public int step() {
-    	return step;
+        return step;
     }
 
     @Override
@@ -37,29 +37,25 @@ public class TankMoved implements Event {
                 '}';
     }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((direction == null) ? 0 : direction.hashCode());
-		result = prime * result + step;
-		result = prime * result + tankId;
-		return result;
-	}
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof TankMoved)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
 
         TankMoved tankMoved = (TankMoved) o;
 
-        if (tankId != tankMoved.tankId) return false;
-        if (direction != tankMoved.direction) return false;
         if (step != tankMoved.step) return false;
+        if (direction != tankMoved.direction) return false;
+        if (tankId != null ? !tankId.equals(tankMoved.tankId) : tankMoved.tankId != null) return false;
 
         return true;
     }
 
+    @Override
+    public int hashCode() {
+        int result = tankId != null ? tankId.hashCode() : 0;
+        result = 31 * result + (direction != null ? direction.hashCode() : 0);
+        result = 31 * result + step;
+        return result;
+    }
 }
