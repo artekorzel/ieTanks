@@ -1,4 +1,4 @@
-package pl.edu.agh.ietanks.sandbox.simple;
+package pl.edu.agh.ietanks.sandbox.simple.api;
 
 import pl.edu.agh.ietanks.gameplay.game.api.BotAlgorithm;
 import pl.edu.agh.ietanks.gameplay.game.api.BotId;

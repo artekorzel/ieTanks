@@ -8,6 +8,7 @@ import com.google.api.client.http.HttpResponse;
 import com.google.common.collect.Lists;
 import pl.edu.agh.ietanks.gameplay.game.api.BotAlgorithm;
 import pl.edu.agh.ietanks.gameplay.game.api.BotId;
+import pl.edu.agh.ietanks.sandbox.simple.api.BotService;
 
 import java.io.IOException;
 import java.util.Arrays;
