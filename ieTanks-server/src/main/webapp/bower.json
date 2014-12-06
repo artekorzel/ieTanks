@@ -1,0 +1,30 @@
+{
+  "name": "ieTanks",
+  "version": "0.5",
+  "homepage": "https://github.com/artekorzel/ieTanks",
+  "authors": [
+    "lots"
+  ],
+  "description": "Best tanks game",
+  "main": "index.html",
+  "keywords": [
+    "tanks",
+    "ie"
+  ],
+  "license": "GPL",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-route": "~1.3.4",
+    "angular-resource": "~1.3.4",
+    "bootstrap": "~3.3.1",
+    "font-awesome": "~4.2.0",
+    "phaser": "~2.1.3"
+  }
+}

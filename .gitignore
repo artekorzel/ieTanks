@@ -4,3 +4,4 @@
 target/
 cachedir
 ieTanks-gameplay/cachedir
+bower_components/
