@@ -8,7 +8,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import pl.edu.agh.ietanks.boards.api.BoardsReader;
 import pl.edu.agh.ietanks.boards.model.Board;
 import pl.edu.agh.ietanks.gameplay.game.api.*;
-import pl.edu.agh.ietanks.gameplay.testutils.ResourceUtils;
+import pl.edu.agh.ietanks.gameplay.utils.ResourceUtils;
 
 import java.util.ArrayList;
 import java.util.List;

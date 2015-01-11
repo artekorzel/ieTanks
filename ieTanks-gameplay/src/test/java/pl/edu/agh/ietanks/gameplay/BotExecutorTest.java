@@ -9,7 +9,7 @@ import pl.edu.agh.ietanks.engine.simple.BoardState;
 import pl.edu.agh.ietanks.engine.simple.actions.Shot;
 import pl.edu.agh.ietanks.gameplay.bot.BotExecutor;
 import pl.edu.agh.ietanks.gameplay.game.api.BotId;
-import pl.edu.agh.ietanks.gameplay.testutils.ResourceUtils;
+import pl.edu.agh.ietanks.gameplay.utils.ResourceUtils;
 
 import java.io.IOException;
 import java.util.Arrays;

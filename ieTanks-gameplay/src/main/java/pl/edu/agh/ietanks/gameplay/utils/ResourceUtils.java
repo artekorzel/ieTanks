@@ -1,4 +1,4 @@
-package pl.edu.agh.ietanks.gameplay.testutils;
+package pl.edu.agh.ietanks.gameplay.utils;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;

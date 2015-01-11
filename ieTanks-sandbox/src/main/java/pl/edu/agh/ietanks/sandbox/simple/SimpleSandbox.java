@@ -1,6 +1,7 @@
 package pl.edu.agh.ietanks.sandbox.simple;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import pl.edu.agh.ietanks.boards.api.BoardsReader;
 import pl.edu.agh.ietanks.boards.model.Board;
@@ -22,7 +23,7 @@ public class SimpleSandbox implements Sandbox {
     private final GamePlay gamePlay;
 
     @Autowired
-    public SimpleSandbox(BotService botService, BoardsReader boardsReader, GamePlay gamePlay) {
+    public SimpleSandbox(@Qualifier("simpleBotService")BotService botService, BoardsReader boardsReader, GamePlay gamePlay) {
         this.botService = botService;
         this.boardsReader = boardsReader;
         this.gamePlay = gamePlay;
