@@ -104,7 +104,7 @@
                 </os>
             </activation>
             <properties>
-                <bower.executable>/usr/bin/bower</bower.executable>
+                <bower.executable>/usr/local/bin/bower</bower.executable>
                 <python.executable>/usr/bin/python</python.executable>
             </properties>
         </profile>

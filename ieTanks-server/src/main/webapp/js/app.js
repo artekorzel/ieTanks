@@ -5,6 +5,7 @@
 var ieTanksApp = angular.module('ieTanksApp', [
     'ieTanksVisualization',
     'ieTanksServices',
+    'botsForm',
     'ngRoute',
     'ngResource'
 ]); // add other modules if dependant here
@@ -19,6 +20,10 @@ ieTanksApp.config(['$routeProvider',
             when('/history', {
                 templateUrl: 'html/history.html',
                 controller: 'GameHistory'
+            }).
+            when('/bots', {
+                templateUrl: 'html/bots.html',
+                controller: 'BotsController'
             }).
             otherwise({
                 redirectTo: '/'
