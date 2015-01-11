@@ -2,6 +2,7 @@ package pl.edu.agh.ietanks.engine.simple;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import org.fest.assertions.Condition;
 import org.junit.Test;
 import pl.edu.agh.ietanks.engine.api.*;
 import pl.edu.agh.ietanks.engine.api.events.*;
@@ -46,9 +47,21 @@ public class SimpleEngineTest {
         // then
         final ArrayList<Event> allEvents = Lists.newArrayList(Iterables.concat(events1, events2));
 
-        assertThat(allEvents).containsOnly(
-                new TankMoved(TANK_0, Direction.Right, 1),
-                new TankMoved(TANK_1, Direction.Right, 1));
+        Condition<List<?>> containsElements = new Condition<List<?>>() {
+            @Override
+            public boolean matches(List<?> events) {
+                if (events.contains(new TankMoved(TANK_0, Direction.Right, 1, new Position(2,3))) &&
+                        events.contains(new TankMoved(TANK_1, Direction.Right, 1, new Position(1,1)))) {
+                    return true;
+                }
+                if (events.contains(new TankMoved(TANK_0, Direction.Right, 1, new Position(1,1))) &&
+                        events.contains(new TankMoved(TANK_1, Direction.Right, 1, new Position(2,3)))) {
+                    return true;
+                }
+                return false;
+            }
+        };
+        assertThat(allEvents).satisfies(containsElements);
     }
 
     @Test

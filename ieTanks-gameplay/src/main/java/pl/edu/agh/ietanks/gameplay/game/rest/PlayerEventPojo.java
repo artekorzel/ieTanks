@@ -11,8 +11,8 @@ public class PlayerEventPojo {
     public PlayerEventPojo(AbstractTankEvent tankEvent) {
         this.playerId = tankEvent.tankId();
         this.action = tankEvent.getAction().getActionName();
-        this.x = tankEvent.getDirection().getX();
-        this.y = tankEvent.getDirection().getY();
+        this.x = tankEvent.getPosition().fromLeft();
+        this.y = tankEvent.getPosition().fromTop();
     }
 
     public String getPlayerId() {

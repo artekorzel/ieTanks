@@ -7,6 +7,7 @@ import pl.edu.agh.ietanks.engine.api.events.*;
 import pl.edu.agh.ietanks.engine.simple.actions.Move;
 import pl.edu.agh.ietanks.engine.simple.actions.Shot;
 
+import javax.print.attribute.standard.Destination;
 import java.util.*;
 
 public class GameLogic {
@@ -87,7 +88,7 @@ public class GameLogic {
 
                 String tankId = board.findTank(position);
                 board.removeTank(tankId);
-                events.add(new TankDestroyed(tankId));
+                events.add(new TankDestroyed(tankId, position));
 
             }
         }
@@ -153,21 +154,23 @@ public class GameLogic {
             }
         }
 
+        Position destination = findMoveDestination(board.findTank(botId), new Move(move.getDirection(), possibleStep));
+
         if (possibleStep == 0) {
-            events.add(new TankNotMoved(botId, move.getDirection(), move.getStep()));
+            events.add(new TankNotMoved(botId, move.getDirection(), move.getStep(), destination));
         } else {
-            events.add(new TankMoved(botId, move.getDirection(), possibleStep));
-            board.replaceTank(botId, findMoveDestination(board.findTank(botId), new Move(move.getDirection(), possibleStep)));
+            events.add(new TankMoved(botId, move.getDirection(), possibleStep, destination));
+            board.replaceTank(botId, destination);
         }
         if (bumpedIntoWall) {
-            events.add(new TankBumpedIntoWall(botId, move.getDirection(), move.getStep()));
+            events.add(new TankBumpedIntoWall(botId, move.getDirection(), move.getStep(), destination));
         }
 
         // check if there are missiles here
         Collection<Missile> missiles = board.findMissiles(possiblePosition.get());
         if (!missiles.isEmpty()) {
             board.removeTank(botId);
-            events.add(new TankDestroyed(botId));
+            events.add(new TankDestroyed(botId, possiblePosition.get()));
             for (Missile missile : missiles) {
                 board.removeMissile(missile);
                 events.add(new MissileDestroyed(missile.id(), missile.position(), missile.direction(), missile.speed()));
@@ -184,6 +187,11 @@ public class GameLogic {
         board.createMissile(missile);
         events.add(new MissileCreated(missileId, destination, shot.getDirection(), shot.getSpeed()));
 
+        // if missile destination is not within board, destroy it
+        if (!board.isWithin(destination)) {
+            events.add(new MissileDestroyed(missileId, destination, shot.getDirection(), shot.getSpeed()));
+        }
+
         // remove missiles at the same positions
         if (board.findMissiles(destination).size() > 1) {
 
@@ -199,7 +207,7 @@ public class GameLogic {
         if (board.findTank(destination) != null) {
             String tankId = board.findTank(destination);
             board.removeTank(tankId);
-            events.add(new TankDestroyed(tankId));
+            events.add(new TankDestroyed(tankId, destination));
 
             board.removeMissile(missile);
             events.add(new MissileDestroyed(missile.id(), missile.position(), missile.direction(), missile.speed()));

@@ -7,10 +7,7 @@ import org.junit.Test;
 import pl.edu.agh.ietanks.engine.api.Action;
 import pl.edu.agh.ietanks.engine.api.Direction;
 import pl.edu.agh.ietanks.engine.api.Position;
-import pl.edu.agh.ietanks.engine.api.events.Event;
-import pl.edu.agh.ietanks.engine.api.events.TankBumpedIntoWall;
-import pl.edu.agh.ietanks.engine.api.events.TankMoved;
-import pl.edu.agh.ietanks.engine.api.events.TankNotMoved;
+import pl.edu.agh.ietanks.engine.api.events.*;
 import pl.edu.agh.ietanks.engine.simple.actions.Move;
 import pl.edu.agh.ietanks.engine.simple.actions.Shot;
 import pl.edu.agh.ietanks.engine.testutils.StateBuilder;
@@ -66,7 +63,7 @@ public class GameLogicTest {
                 "....");
 
         expectedEvents(
-                new TankMoved(TANK_0, Direction.Right, 1));
+                new TankMoved(TANK_0, Direction.Right, 1, new Position(1, 2)));
     }
 
     @Test
@@ -86,7 +83,7 @@ public class GameLogicTest {
                 "....");
 
         expectedEvents(
-                new TankNotMoved(TANK_0, Direction.Right, 1));
+                new TankNotMoved(TANK_0, Direction.Right, 1, new Position(1,1)));
     }
 
     @Test
@@ -106,8 +103,8 @@ public class GameLogicTest {
                 "....");
 
         expectedEvents(
-                new TankMoved(TANK_0, Direction.Right, 2),
-                new TankBumpedIntoWall(TANK_0, Direction.Right, 5));
+                new TankMoved(TANK_0, Direction.Right, 2, new Position(1, 3)),
+                new TankBumpedIntoWall(TANK_0, Direction.Right, 5, new Position(1, 3)));
     }
 
     @Test
@@ -127,7 +124,7 @@ public class GameLogicTest {
                 "......");
 
         expectedEvents(
-                new TankMoved(TANK_0, Direction.Right, 1));
+                new TankMoved(TANK_0, Direction.Right, 1, new Position(1, 2)));
     }
 
     @Test
@@ -217,6 +214,21 @@ public class GameLogicTest {
     }
 
     @Test
+    public void shouldMissileBeRemovedJustAfterCreation() throws Exception {
+        given(
+                "....",
+                "0...",
+                "....",
+                "....",
+                "....");
+
+        when(new Shot(Direction.Left, 1), TANK_0);
+
+        // then
+        assertThat(logic.board().findMissiles()).hasSize(0);
+    }
+
+    @Test
     public void shouldMissileAndTankBeRemoved() throws Exception {
         given(
                 "....",
@@ -295,7 +307,9 @@ public class GameLogicTest {
         assertThat(logic.board().findMissiles()).hasSize(0);
 
         expectedEvents(
-                new TankMoved(TANK_1, Direction.Up, 1));
+                new TankMoved(TANK_1, Direction.Up, 1, new Position(3,1)),
+                new TankDestroyed(TANK_1, new Position(3,1))
+        );
     }
 
     @Test
@@ -339,6 +353,6 @@ public class GameLogicTest {
                 "....");
 
         expectedEvents(
-                new TankMoved(TANK_0, Direction.Right, 1));
+                new TankMoved(TANK_0, Direction.Right, 1, new Position(0, 1)));
     }
 }
