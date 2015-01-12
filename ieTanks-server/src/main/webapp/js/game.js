@@ -3,7 +3,7 @@ var ieTanksVisualization = angular.module('ieTanksVisualization', []);
 ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParams', 'REST',
     function ($scope, $interval, $routeParams, REST) {
         var events = [];
-        var intervalStepping=undefined;
+        var intervalStepping = undefined;
         $scope.gameBorder = 600;
         $scope.sizes = [];
         $scope.games = [];
@@ -23,7 +23,7 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
         };
 
         for(var i = 150; i<1000; i+=150) {
-            $scope.sizes.push(i)
+            $scope.sizes.push(i);
         }
 
         $scope.$watch('selectedGame', function() {
@@ -57,8 +57,8 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
         });
 
         $scope.games = REST.game.query(function() {}, function() {
-            console.log('Failed to load list of games.')
-            alert('Failed to load list of games.')
+            console.log('Failed to load list of games.');
+            alertify.error('Failed to load list of games.');
         });
 
 
@@ -220,14 +220,14 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
                     }, 500, Phaser.Easing.Quadratic.InOut, true);
                 };
 
-                var removeOldItems = function (items_set, identifiers) {
-                    for (var item in items_set) {
-                        if (items_set.hasOwnProperty(item) && identifiers.indexOf(item) === -1) {
-                            items_set[item].element.destroy();
-                            delete items_set[item];
+                var removeOldItems = function (itemsSet, identifiers) {
+                    for (var item in itemsSet) {
+                        if (itemsSet.hasOwnProperty(item) && identifiers.indexOf(item) === -1) {
+                            itemsSet[item].element.destroy();
+                            delete itemsSet[item];
                         }
                     }
-                    return items_set;
+                    return itemsSet;
                 };
 
                 function preload() {

@@ -49,10 +49,10 @@ ieTanksApp.controller('AuthCtrl', function ($scope, $auth) {
     $scope.authenticate = function (provider) {
         $auth.authenticate(provider)
             .then(function () {
-                alert('You have successfully logged in');
+                alertify.success('You have successfully logged in');
             })
             .catch(function (response) {
-                alert('Login failure');
+                alertify.error('Login failure');
             });
     };
 
@@ -62,7 +62,7 @@ ieTanksApp.controller('AuthCtrl', function ($scope, $auth) {
         }
         $auth.logout()
             .then(function () {
-                alert('You have been logged out');
+                alertify.log('You have been logged out');
             })
     };
 });
