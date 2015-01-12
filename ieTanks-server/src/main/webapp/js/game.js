@@ -2,8 +2,75 @@ var ieTanksVisualization = angular.module('ieTanksVisualization', []);
 
 ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParams', 'REST',
     function ($scope, $interval, $routeParams, REST) {
+        var events = [];
+        var intervalStepping = undefined;
+        $scope.gameBorder = 600;
+        $scope.sizes = [];
+        $scope.games = [];
+        $scope.currentStep = 0;
+        $scope.gameLength = 0;
+
+        $scope.changeStep = function(amount) {
+            if($scope.currentStep+amount>=$scope.gameLength) {
+                $scope.currentStep = $scope.gameLength-1;
+            } else {
+                if($scope.currentStep + amount <= 0) {
+                    $scope.currentStep = 0;
+                } else {
+                    $scope.currentStep += amount;
+                }
+            }
+        };
+
+        for(var i = 150; i<1000; i+=150) {
+            $scope.sizes.push(i);
+        }
+
+        $scope.$watch('selectedGame', function() {
+            if($scope.selectedGame) {
+                var gameInfo = REST.game.query({gameId: $scope.selectedGame.gameId}, function () {
+                    events = gameInfo['events'];
+                    $scope.map = gameInfo['map'];
+                    $scope.gameLength = events.length;
+                    $scope.currentStep = 0;
+                    if(angular.isDefined(intervalStepping)) {
+                        $interval.cancel(intervalStepping);
+                    }
+                    intervalStepping = $interval(function () {
+                        if ($scope.currentStep < $scope.gameLength) {
+                            $scope.state = events[$scope.currentStep];
+                            ++($scope.currentStep);
+                        } else {
+                            console.log('No more events to display.');
+                        }
+                    }, 2000);
+                }, function () {
+                    console.log('Failed to load game events.');
+                });
+            }
+        });
+
+        $scope.$watch('currentStep', function(){
+            if (!isNaN($scope.currentStep) && $scope.currentStep < $scope.gameLength) {
+                $scope.state = events[$scope.currentStep];
+            }
+        });
+
+        $scope.games = REST.game.query(function() {}, function() {
+            console.log('Failed to load list of games.');
+            alertify.error('Failed to load list of games.');
+        });
+
+
+        // TODO: REMOVE/COMMENT EVERYTHING UNDER WHEN REST SERVICES ARE READY
+
+        for(var i = 1; i< 100; i++) {
+            $scope.games.push({gameId:i});
+        }
+
         $scope.map = {
-            border: 20,
+            width: 18,
+            height: 20,
             obstacles: [{type: '', x: 4, y: 9}, {type: '', x: 10, y: 7}, {type: '', x: 11, y: 7}, {
                 type: '',
                 x: 12,
@@ -11,80 +78,81 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
             }]
         };
 
-        //TODO uncomment when REST interface is ready
-        //var gameInfo = REST.game.query({gameId: $routeParams.gameId}, function () {
-        //    var step = 0,
-        //        events = gameInfo['events'];
-        //    $scope.map = gameInfo['map'];
-        //    $interval(function () {
-        //        if (step < events.length) {
-        //            $scope.state = events[step];
-        //            ++step;
-        //        } else {
-        //            console.log('No more events to display.');
-        //        }
-        //    }, 3000);
-        //}, function () {
-        //    console.log('Failed to load game events.');
-        //});
-
-        var states = [{
-            players: [{id: 'blabla', action: 'move', x: '10', y: '5'}, {
-                id: 'blabla2',
+        events = [{
+            players: [{playerId: 'blabla', action: 'move', x: '10', y: '5'}, {
+                playerId: 'blabla2',
                 action: 'move',
                 x: '3',
                 y: '2'
             }], missiles: []
         },
             {
-                players: [{id: 'blabla', action: 'move', x: '6', y: '2'}, {
-                    id: 'blabla2',
+                players: [{playerId: 'blabla', action: 'move', x: '6', y: '2'}, {
+                    playerId: 'blabla2',
                     action: 'move',
                     x: '11',
                     y: '2'
                 }], missiles: []
             },
             {
-                players: [{id: 'blabla', action: 'move', x: '15', y: '19'}, {
-                    id: 'blabla2',
+                players: [{playerId: 'blabla', action: 'move', x: '14', y: '19'}, {
+                    playerId: 'blabla2',
                     action: 'move',
                     x: '5',
                     y: '5'
                 }], missiles: []
             },
             {
-                players: [{id: 'blabla', action: 'move', x: '0', y: '16'}, {
-                    id: 'blabla2',
+                players: [{playerId: 'blabla', action: 'move', x: '0', y: '16'}, {
+                    playerId: 'blabla2',
                     action: 'move',
                     x: '7',
                     y: '0'
                 }], missiles: []
             },
             {
-                players: [{id: 'blabla', action: 'move', x: '0', y: '14'}, {
-                    id: 'blabla2',
+                players: [{playerId: 'blabla', action: 'move', x: '0', y: '14'}, {
+                    playerId: 'blabla2',
                     action: 'shoot',
                     x: '7',
                     y: '0'
-                }], missiles: [{player_id: 'blabla2', id: '1', x: '5', y: '4'}]
+                }], missiles: [{playerId: 'blabla2', missileId: '1', x: '5', y: '4'}]
             },
             {
-                players: [{id: 'blabla', action: 'move', x: '5', y: '12'}, {
-                    id: 'blabla2',
+                players: [{playerId: 'blabla', action: 'move', x: '5', y: '12'}, {
+                    playerId: 'blabla2',
                     action: 'move',
                     x: '0',
                     y: '10'
-                }], missiles: [{player_id: 'blabla2', id: '1', x: '5', y: '12'}]
+                }], missiles: [{playerId: 'blabla2', missileId: '1', x: '5', y: '12'}]
             },
-            {players: [{id: 'blabla2', action: 'move', x: '7', y: '12'}], missiles: []},
-            {players: [{id: 'blabla2', action: 'move', x: '0', y: '0'}], missiles: []}];
+            {players: [{playerId: 'blabla2', action: 'move', x: '7', y: '12'}], missiles: []},
+            {players: [{playerId: 'blabla2', action: 'move', x: '0', y: '0'}], missiles: []}];
 
         var ind = 0;
+        var changeMap = false;
+        $scope.gameLength = events.length;
         $interval(function () {
-            //var ind = Math.floor(Math.random()*states.length);
-            $scope.state = states[ind];
-            ind = (1 + ind) % states.length;
-        }, 3000);
+            if ($scope.currentStep==0 && changeMap) {
+                var mapWidth = Math.floor(Math.random()*4)+18;
+                var mapHeight = Math.floor(Math.random()*4)+20;
+                $scope.map = {
+                    width: mapWidth,
+                    height: mapHeight,
+                    obstacles: [{type: '', x: 4, y: 9}, {type: '', x: 10, y: 7}, {type: '', x: 11, y: 7}, {
+                        type: '',
+                        x: 12,
+                        y: 7
+                    }]
+                };
+                $scope.gameLength = events.length;
+                changeMap = false;
+            } else {
+                //$scope.state = events[$scope.currentStep];
+                $scope.currentStep = (1 + $scope.currentStep) % events.length;
+                changeMap = true;
+            }
+        }, 1500);
 
     }
 ])
@@ -101,24 +169,22 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
         return {
             scope: {
                 map: '=',
-                state: '='
+                state: '=',
+                maximalBorder: '='
             },
             link: function ($scope) {
-                var gameBorder = 400;
+
+                var gameBorder = $scope.maximalBorder || 600, maximalWidth, maximalHeight;
                 var tileSize = 32;
                 var mapTileSize = 128;
-                var game, scale, scaledGrid, players, missiles, obstacles, isInit, mapScale, scaledMapGrid;
-                scale = (gameBorder / $scope.gridBorder) / tileSize;
-                mapScale = (gameBorder / $scope.gridBorder) / mapTileSize;
-                scaledGrid = tileSize * scale;
-                scaledMapGrid = mapTileSize * mapScale
-                isInit = true;
+                var game, ratio, scale, scaledGrid, players, missiles, obstacles, mapScale, scaledMapGrid, leadGrid;
 
-                var Player = function (id, tank, turret, direction) {
+                var Player = function (id, tank, turret, direction, color) {
                     this.id = id;
                     this.element = tank;
                     this.turret = turret;
                     this.direction = direction;
+                    this.color = color;
                 };
 
                 var Missile = function (id, bullet, direction) {
@@ -136,14 +202,14 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
                     var color = Phaser.Color.getRandomColor();
                     tank.tint = color;
                     turret.tint = color;
-                    return new Player(id, tank, turret, 0);
+                    return new Player(id, tank, turret, 0, color);
                 };
 
-                var createMissile = function (id, x, y) {
+                var createMissile = function (id, x, y, color) {
                     var bullet = game.add.sprite(x * scaledGrid, y * scaledGrid, 'bullet');
                     bullet.scale.x = scale;
                     bullet.scale.y = scale;
-                    bullet.tint = Phaser.Color.getRandomColor();
+                    bullet.tint = color;
                     return new Missile(id, bullet, 0);
                 };
 
@@ -154,25 +220,15 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
                     }, 500, Phaser.Easing.Quadratic.InOut, true);
                 };
 
-                var removeOldItems = function (set, subset) {
-                    var identifiers = subset.map(function (state) {
-                        return state.id;
-                    });
-                    for (var item in set) {
-                        if (set.hasOwnProperty(item) && identifiers.indexOf(item) === -1) {
-                            set[item].element.destroy();
-                            delete set[item];
+                var removeOldItems = function (itemsSet, identifiers) {
+                    for (var item in itemsSet) {
+                        if (itemsSet.hasOwnProperty(item) && identifiers.indexOf(item) === -1) {
+                            itemsSet[item].element.destroy();
+                            delete itemsSet[item];
                         }
                     }
-                    return set;
+                    return itemsSet;
                 };
-
-                game = new Phaser.Game(gameBorder, gameBorder, Phaser.CANVAS, 'game-window', {}, true);
-
-                game.state.add('animation', {
-                    preload: preload,
-                    create: create
-                });
 
                 function preload() {
                     //load image which will be used as ground texture
@@ -202,6 +258,13 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
                     game.load.image('tank', 'assets/tankBaseWhite.png');
                     game.load.image('turret', 'assets/tankTurretWhite.png');
                     game.load.image('wall', 'assets/Stone_wall.png');
+                    //  This sets a limit on the up-scale
+                    game.scale.maxHeight = maximalHeight;
+                    game.scale.maxWidth = maximalWidth;
+
+                    //  Then we tell Phaser that we want it to scale up to whatever the browser can handle, but to do it proportionally
+                    game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+                    game.scale.setScreenSize();
                 }
 
                 function prepareStaticMap() {
@@ -231,7 +294,7 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
                     s.scale.x = mapScale;
                     s.scale.y = mapScale;
 
-                    for (var i = 1; i < $scope.map["border"]; i++) {
+                    for (var i = 1; i < leadGrid; i++) {
                         var flower = Math.floor((Math.random() * 15) + 1);
                         var x = Math.floor((Math.random() * gameBorder));
                         var y = Math.floor((Math.random() * gameBorder));
@@ -267,50 +330,93 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
                     if (!map) {
                         return;
                     }
-                    isInit = true;
+                    if (game) {
+                        if (game.canvas) {
+                            Phaser.Canvas.removeFromDOM(game.canvas)
+                        }
+                        game.destroy();
+                    }
+
+                    var gridWidth = $scope.map["width"];
+                    var gridHeight = $scope.map["height"];
+                    var gameHeight, gameWidth;
+                    ratio = gridWidth / gridHeight;
+                    if(gridWidth>=gridHeight) {
+                        gameWidth = gameBorder;
+                        gameHeight = gameBorder/ratio;
+                        leadGrid = gridWidth;
+                    } else {
+                        gameWidth = gameBorder * ratio;
+                        gameHeight = gameBorder;
+                        leadGrid = gridHeight;
+                    }
+                    maximalWidth = gameWidth;
+                    maximalHeight = gameHeight;
+                    game = new Phaser.Game(gameWidth, gameHeight, Phaser.CANVAS, 'game-window', {}, true);
+
+                    game.state.add('animation', {
+                        preload: preload,
+                        create: create
+                    });
                     players = {};
                     missiles = {};
                     obstacles = $scope.map["obstacles"] || [];
-                    scale = (gameBorder / $scope.map["border"]) / tileSize;
-                    mapScale = (gameBorder / $scope.map["border"]) / mapTileSize;
+                    scale = (gameBorder / leadGrid) / tileSize;
+                    mapScale = (gameBorder / leadGrid) / mapTileSize;
                     scaledGrid = tileSize * scale;
                     scaledMapGrid = mapScale * mapTileSize;
                     game.state.start('animation');
                 }
 
                 function loadState(state) {
-                    if (!state) {
+                    if (!game || !(game.add) || !$scope.map || !state) {
                         return;
                     }
 
-                    console.log(state); // FIXME debug info
-                    if (isInit) {
-                        console.log("init");
-                        isInit = false;
-                    } else {
-                        console.log("update");
-                    }
+                    state['players'].forEach(function (state) {
+                        if (!players.hasOwnProperty(state.playerId)) {
+                            players[state.playerId] = createPlayer(state.playerId, state.x, state.y);
+                        }
+                        players[state.playerId].moveTo(state.x, state.y);
+                    });
+
 
                     state['missiles'].forEach(function (state) {
-                        if (!missiles.hasOwnProperty(state.id)) {
-                            missiles[state.id] = createMissile(state.id, state.x, state.y);
+                        if (!missiles.hasOwnProperty(state.missileId)) {
+                            var missile_color;
+                            if (players.hasOwnProperty(state.playerId)) {
+                                missile_color = players[state.playerId].color;
+                            }
+                            else {
+                                missile_color = Phaser.Color.getRandomColor();
+                            }
+                            missiles[state.missileId] = createMissile(state.missileId, state.x, state.y, missile_color);
                         }
-                        missiles[state.id].moveTo(state.x, state.y);
+                        missiles[state.missileId].moveTo(state.x, state.y);
                     });
-                    state['players'].forEach(function (state) {
-                        if (!players.hasOwnProperty(state.id)) {
-                            players[state.id] = createPlayer(state.id, state.x, state.y);
-                        }
-                        players[state.id].moveTo(state.x, state.y);
-                    });
-                    players = removeOldItems(players, state['players']);
-                    missiles = removeOldItems(missiles, state['missiles']);
+
+                    players = removeOldItems(players, state['players'].map(function (state) {
+                        return state.playerId;
+                    }));
+                    missiles = removeOldItems(missiles, state['missiles'].map(function (state) {
+                        return state.missileId;
+                    }));
                 }
 
                 $scope.$watch('map', loadGame, true);
 
                 $scope.$watch('state', loadState);
 
+                $scope.$watch('maximalBorder', function()
+                {
+                    if($scope.maximalBorder != gameBorder) {
+                        gameBorder = $scope.maximalBorder || 600;
+                        loadGame($scope.map);
+                        if (game) {
+                            loadState($scope.state);
+                        }
+                    }
+                });
 
                 $scope.$on('$destroy', function () {
                     game.$destroy();

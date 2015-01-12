@@ -13,7 +13,7 @@ var ieTanksApp = angular.module('ieTanksApp', [
 ieTanksApp.config(['$routeProvider',
     function ($routeProvider) {
         $routeProvider.
-            when('/game/:gameId', {
+            when('/game', {
                 templateUrl: 'html/game.html',
                 controller: 'GameCtrl'
             }).
@@ -49,10 +49,10 @@ ieTanksApp.controller('AuthCtrl', function ($scope, $auth) {
     $scope.authenticate = function (provider) {
         $auth.authenticate(provider)
             .then(function () {
-                alert('You have successfully logged in');
+                alertify.success('You have successfully logged in');
             })
             .catch(function (response) {
-                alert('Login failure');
+                alertify.error('Login failure');
             });
     };
 
@@ -62,13 +62,12 @@ ieTanksApp.controller('AuthCtrl', function ($scope, $auth) {
         }
         $auth.logout()
             .then(function () {
-                alert('You have been logged out');
+                alertify.log('You have been logged out');
             })
     };
 });
 
 ieTanksApp.run(function ($rootScope, $location) {
-    $rootScope.newGameId = Math.floor(Math.random() * 1000); // FIXME get ID from server instead?
     $rootScope.isActive = function (viewLocation) {
         return $location.path().indexOf(viewLocation) === 0;
     };
