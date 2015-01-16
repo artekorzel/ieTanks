@@ -61,7 +61,7 @@ public class GameLogic {
             Preconditions.checkNotNull(destination, "invalid direction");
             if (board.isWithin(destination)) {
                 board.replaceMissile(missile, destination);
-                events.add(new MissileMoved(missile.id(), destination, missile.direction(), missile.speed()));
+                events.add(new MissileMoved(missile.id(), missile.tankId(), destination, missile.direction(), missile.speed()));
             } else {
                 missilesNotWithinBoard.put(missile, destination);
             }
@@ -71,7 +71,7 @@ public class GameLogic {
         // then remove missiles not within board
         for (Missile missile : missilesNotWithinBoard.keySet()) {
             board.removeMissile(missile);
-            events.add(new MissileDestroyed(missile.id(), missilesNotWithinBoard.get(missile), missile.direction(), missile.speed()));
+            events.add(new MissileDestroyed(missile.id(), missile.tankId(), missilesNotWithinBoard.get(missile), missile.direction(), missile.speed()));
         }
     }
 
@@ -81,7 +81,7 @@ public class GameLogic {
 
                 for (Missile missile : missilePositions.get(position)) {
                     board.removeMissile(missile);
-                    events.add(new MissileDestroyed(missile.id(), missile.position(), missile.direction(), missile.speed()));
+                    events.add(new MissileDestroyed(missile.id(), missile.tankId(), missile.position(), missile.direction(), missile.speed()));
                 }
 
                 missilePositions.remove(position);
@@ -99,7 +99,7 @@ public class GameLogic {
             if (missilePositions.get(position).size() > 1) {
                 for (Missile missile : missilePositions.get(position)) {
                     board.removeMissile(missile);
-                    events.add(new MissileDestroyed(missile.id(), missile.position(), missile.direction(), missile.speed()));
+                    events.add(new MissileDestroyed(missile.id(), missile.tankId(), missile.position(), missile.direction(), missile.speed()));
                 }
                 missilePositions.remove(position);
             }
@@ -125,7 +125,7 @@ public class GameLogic {
             tryToMove(botId, events, botPosition, move);
         } else if (proposedAction instanceof Shot) {
             Shot shot = (Shot) proposedAction;
-            tryToShoot(events, botPosition, shot);
+            tryToShoot(events, botId, botPosition, shot);
         }
 
         return events;
@@ -173,23 +173,23 @@ public class GameLogic {
             events.add(new TankDestroyed(botId, possiblePosition.get()));
             for (Missile missile : missiles) {
                 board.removeMissile(missile);
-                events.add(new MissileDestroyed(missile.id(), missile.position(), missile.direction(), missile.speed()));
+                events.add(new MissileDestroyed(missile.id(), missile.tankId(), missile.position(), missile.direction(), missile.speed()));
             }
         }
     }
 
-    private void tryToShoot(List<Event> events, Optional<Position> botPosition, Shot shot) {
+    private void tryToShoot(List<Event> events, String botId, Optional<Position> botPosition, Shot shot) {
         Position destination = findMissileDestination(shot.getDirection(), botPosition.get(), shot.getSpeed());
 
         // create missile
         int missileId = nextMissileId();
-        Missile missile = new Missile(missileId, shot.getSpeed(), shot.getDirection(), destination);
+        Missile missile = new Missile(missileId, botId, shot.getSpeed(), shot.getDirection(), destination);
         board.createMissile(missile);
-        events.add(new MissileCreated(missileId, destination, shot.getDirection(), shot.getSpeed()));
+        events.add(new MissileCreated(missileId, botId, destination, shot.getDirection(), shot.getSpeed()));
 
         // if missile destination is not within board, destroy it
         if (!board.isWithin(destination)) {
-            events.add(new MissileDestroyed(missileId, destination, shot.getDirection(), shot.getSpeed()));
+            events.add(new MissileDestroyed(missileId, botId, destination, shot.getDirection(), shot.getSpeed()));
         }
 
         // remove missiles at the same positions
@@ -198,7 +198,7 @@ public class GameLogic {
             Collection<Missile> missilesToDestroy = board.findMissiles(destination);
             for (Missile missileToDestroy : missilesToDestroy) {
                 board.removeMissile(missileToDestroy);
-                events.add(new MissileDestroyed(missileToDestroy.id(),
+                events.add(new MissileDestroyed(missileToDestroy.id(), missileToDestroy.tankId(),
                         missileToDestroy.position(), missileToDestroy.direction(), missileToDestroy.speed()));
             }
         }
@@ -210,7 +210,7 @@ public class GameLogic {
             events.add(new TankDestroyed(tankId, destination));
 
             board.removeMissile(missile);
-            events.add(new MissileDestroyed(missile.id(), missile.position(), missile.direction(), missile.speed()));
+            events.add(new MissileDestroyed(missile.id(), missile.tankId(), missile.position(), missile.direction(), missile.speed()));
         }
     }
 

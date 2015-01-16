@@ -9,8 +9,8 @@ import pl.edu.agh.ietanks.engine.api.Position;
 public class MissileMoved extends AbstractMissileEvent {
 
 
-    public MissileMoved(int id, Position position, Direction direction, int speed) {
-        super(MissileAction.MOVED, id, position, direction, speed);
+    public MissileMoved(int id, String tankId, Position position, Direction direction, int speed) {
+        super(MissileAction.MOVED, id, tankId, position, direction, speed);
 
     }
 
@@ -18,6 +18,7 @@ public class MissileMoved extends AbstractMissileEvent {
     @Override
     public String toString() {
         return "MissileCreated {id=" + id +
+                ", tankId=" + tankId +
                 ", direction=" + direction + ", speed=" + speed
                 + ", position=" + position + "}";
     }
@@ -25,6 +26,7 @@ public class MissileMoved extends AbstractMissileEvent {
     @Override
     public int hashCode() {
         int result = id;
+        result = 31 * result + (tankId != null ? tankId.hashCode() : 0);
         result = 31 * result + (direction != null ? direction.hashCode() : 0);
         result = 31 * result + speed;
         result = 31 * result + (position != null ? position.hashCode() : 0);
@@ -39,6 +41,7 @@ public class MissileMoved extends AbstractMissileEvent {
         MissileMoved that = (MissileMoved) o;
 
         if (id != that.id) return false;
+        if (tankId != null ? !tankId.equals(that.tankId) : that.tankId != null) return false;
         if (speed != that.speed) return false;
         if (direction != that.direction) return false;
         if (position != null ? !position.equals(that.position) : that.position != null) return false;
