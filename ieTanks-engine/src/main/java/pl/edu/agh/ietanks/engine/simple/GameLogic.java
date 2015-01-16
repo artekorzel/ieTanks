@@ -5,6 +5,7 @@ import com.google.common.base.Preconditions;
 import pl.edu.agh.ietanks.engine.api.*;
 import pl.edu.agh.ietanks.engine.api.events.*;
 import pl.edu.agh.ietanks.engine.simple.actions.Move;
+import pl.edu.agh.ietanks.engine.simple.actions.NoOperation;
 import pl.edu.agh.ietanks.engine.simple.actions.Shot;
 
 import javax.print.attribute.standard.Destination;
@@ -126,6 +127,8 @@ public class GameLogic {
         } else if (proposedAction instanceof Shot) {
             Shot shot = (Shot) proposedAction;
             tryToShoot(events, botId, botPosition, shot);
+        } else if (proposedAction instanceof NoOperation) {
+            doNotMove(botId, events, botPosition);
         }
 
         return events;
@@ -212,6 +215,10 @@ public class GameLogic {
             board.removeMissile(missile);
             events.add(new MissileDestroyed(missile.id(), missile.tankId(), missile.position(), missile.direction(), missile.speed()));
         }
+    }
+
+    private void doNotMove(String botId, List<Event> events, Optional<Position> botPosition) {
+        events.add(new TankNotMoved(botId, Direction.None, 0, botPosition.get()));
     }
 
     private Position findMissileDestination(Direction direction, Position position, int speed) {
