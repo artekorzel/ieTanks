@@ -7,13 +7,15 @@ import pl.edu.agh.ietanks.engine.api.Position;
 public abstract class AbstractMissileEvent implements Event {
 
     protected final int id;
+    protected final String tankId;
     protected final Direction direction;
     protected final Position position;
     protected final int speed;
     private final MissileAction action;
 
-    public AbstractMissileEvent(MissileAction action, int id, Position position, Direction direction, int speed) {
+    public AbstractMissileEvent(MissileAction action, int id, String tankId, Position position, Direction direction, int speed) {
         this.id = id;
+        this.tankId = tankId;
         this.direction = direction;
         this.speed = speed;
         this.position = position;
@@ -27,6 +29,10 @@ public abstract class AbstractMissileEvent implements Event {
 
     public int id() {
         return id;
+    }
+
+    public String tankId() {
+        return tankId;
     }
 
     public Position position() {
