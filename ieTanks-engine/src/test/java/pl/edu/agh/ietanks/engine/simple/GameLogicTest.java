@@ -141,7 +141,8 @@ public class GameLogicTest {
         assertThat(logic.board().findMissiles()).hasSize(1);
         assertThat(logic.board().findMissiles().iterator().next().position())
                 .isEqualTo(new Position(2, 1));
-        assertThat(events).hasSize(1);
+        assertThat(events.get(0)).isInstanceOf(TankNotMoved.class);
+        assertThat(events.get(1)).isInstanceOf(MissileCreated.class);
     }
 
     @Test

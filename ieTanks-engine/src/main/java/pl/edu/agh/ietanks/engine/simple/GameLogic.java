@@ -182,6 +182,9 @@ public class GameLogic {
     }
 
     private void tryToShoot(List<Event> events, String botId, Optional<Position> botPosition, Shot shot) {
+
+        events.add(new TankNotMoved(botId, Direction.None, 0, botPosition.get()));
+
         Position destination = findMissileDestination(shot.getDirection(), botPosition.get(), shot.getSpeed());
 
         // create missile
