@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 
 public class Interval {
     private final int value;
+
+    /**
+     * Replace with TimeUnit later (conversion needed) *
+     */
     private final String unit;
 
     @JsonCreator
