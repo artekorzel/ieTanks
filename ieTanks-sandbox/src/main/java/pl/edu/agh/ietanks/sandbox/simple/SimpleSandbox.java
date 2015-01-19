@@ -23,7 +23,7 @@ public class SimpleSandbox implements Sandbox {
     private final GamePlay gamePlay;
 
     @Autowired
-    public SimpleSandbox(@Qualifier("simpleBotService")BotService botService, BoardsReader boardsReader, GamePlay gamePlay) {
+    public SimpleSandbox(@Qualifier("httpBotService")BotService botService, BoardsReader boardsReader, GamePlay gamePlay) {
         this.botService = botService;
         this.boardsReader = boardsReader;
         this.gamePlay = gamePlay;
