@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import pl.edu.agh.ietanks.league.service.LeagueDefinition;
 import pl.edu.agh.ietanks.league.service.LeagueService;
 
 import java.util.Collections;
@@ -18,12 +19,13 @@ public class LeagueRestPort {
     private LeagueService leagueService;
 
     @RequestMapping(value = "/league", method = RequestMethod.POST)
-    public void startLeague(@RequestBody LeagueDefinition league) {
-        log.info("League started!");
+    public void startLeague(@RequestBody LeagueDefinitionDTO league) {
+        LeagueDefinition leagueDefinition = league.toLeagueDefinition();
+        leagueService.startLeague(leagueDefinition);
     }
 
     @RequestMapping("/league")
-    public List<League> getGameIds() {
+    public List<LeagueDTO> getGameIds() {
         log.info("GET");
         return Collections.emptyList();
     }

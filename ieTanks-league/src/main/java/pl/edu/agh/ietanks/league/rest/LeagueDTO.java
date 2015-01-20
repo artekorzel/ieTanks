@@ -2,7 +2,7 @@ package pl.edu.agh.ietanks.league.rest;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class League {
+public class LeagueDTO {
     private final String id;
     private final boolean isActive;
     private final String authorId;
@@ -10,7 +10,7 @@ public class League {
     private final int allGames;
     private final int playedGames;
 
-    public League(String id, boolean isActive, String authorId, String nextScheduledGame, int allGames, int playedGames) {
+    public LeagueDTO(String id, boolean isActive, String authorId, String nextScheduledGame, int allGames, int playedGames) {
         this.id = id;
         this.isActive = isActive;
         this.authorId = authorId;

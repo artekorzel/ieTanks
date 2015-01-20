@@ -2,22 +2,26 @@ package pl.edu.agh.ietanks.league.rest;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.collect.ImmutableList;
+import pl.edu.agh.ietanks.league.service.LeagueDefinition;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 
-public class LeagueDefinition {
+public class LeagueDefinitionDTO {
     private final int gamesNumber;
-    private final Interval interval;
+    private final IntervalDTO interval;
     private final String firstGameDatetime;
     private final String boardId;
     private final List<String> players;
 
     @JsonCreator
-    public LeagueDefinition(
+    public LeagueDefinitionDTO(
             @JsonProperty("games_number") int gamesNumber,
-            @JsonProperty("interval") Interval interval,
-            @JsonProperty("first_game_datatime") String firstGameDatetime,
+            @JsonProperty("interval") IntervalDTO interval,
+            @JsonProperty("first_game_datetime") String firstGameDatetime,
             @JsonProperty("board_id") String boardId,
             @JsonProperty("players") List<String> players) {
 
@@ -32,7 +36,7 @@ public class LeagueDefinition {
         return gamesNumber;
     }
 
-    public Interval interval() {
+    public IntervalDTO interval() {
         return interval;
     }
 
@@ -46,5 +50,15 @@ public class LeagueDefinition {
 
     public List<String> players() {
         return players;
+    }
+
+    public LeagueDefinition toLeagueDefinition() {
+        return LeagueDefinition.builder()
+                .gamesNumber(gamesNumber)
+                .boardId(boardId)
+                .players(ImmutableList.copyOf(players))
+                .interval(interval.toInterval())
+                .firstGameDatetime(LocalDateTime.parse(firstGameDatetime, DateTimeFormatter.ISO_DATE_TIME))
+                .build();
     }
 }

@@ -4,7 +4,7 @@
         "value": 2,
         "unit": "seconds"
     },
-    "first_game_datetime": "UTC_ISO_DATETIME",
+    "first_game_datetime": "2015-01-20T20:15:30+01:00",
     "board_id": "dust2",
     "players": ["mequrel", "adebski", "ukidooki", "lasak"]
 }
