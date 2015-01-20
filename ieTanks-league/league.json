@@ -1,0 +1,10 @@
+{
+    "games_number": 10,
+    "interval": {
+        "value": 2,
+        "unit": "seconds"
+    },
+    "first_game_datetime": "UTC_ISO_DATETIME",
+    "board_id": "dust2",
+    "players": ["mequrel", "adebski", "ukidooki", "lasak"]
+}

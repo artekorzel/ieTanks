@@ -9,12 +9,7 @@ import java.util.List;
 public class LeagueDefinition {
     private final int gamesNumber;
     private final Interval interval;
-
-    /**
-     * For now as a string, later will change to DateTime (need object mapper configuration change) *
-     */
     private final String firstGameDatetime;
-
     private final String boardId;
     private final List<String> players;
 

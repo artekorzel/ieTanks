@@ -1,17 +1,15 @@
 package pl.edu.agh.ietanks.league.rest;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Interval {
     private final int value;
-
-    /**
-     * Replace with TimeUnit later (conversion needed) *
-     */
     private final String unit;
 
     @JsonCreator
-    public Interval(int value, String unit) {
+    public Interval(@JsonProperty("value") int value,
+                    @JsonProperty("unit") String unit) {
         this.value = value;
         this.unit = unit;
     }
