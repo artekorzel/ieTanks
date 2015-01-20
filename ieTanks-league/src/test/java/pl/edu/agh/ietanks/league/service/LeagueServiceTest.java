@@ -3,8 +3,11 @@ package pl.edu.agh.ietanks.league.service;
 import com.google.common.collect.ImmutableList;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.support.AnnotationConfigContextLoader;
+import pl.edu.agh.ietanks.league.infrastructure.SchedulerConfiguration;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -13,7 +16,11 @@ import java.util.concurrent.TimeUnit;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(
+        classes = SchedulerConfiguration.class,
+        loader = AnnotationConfigContextLoader.class)
+
 public class LeagueServiceTest {
 
     private static final Interval EVERY_TWO_SECONDS = Interval.builder()
@@ -28,7 +35,8 @@ public class LeagueServiceTest {
             .build();
     private static final String ONE_USER_TO_RULE_THEM_ALL = "mequrel";
 
-    @InjectMocks
+
+    @Autowired
     private LeagueService leagueService;
 
     @Test

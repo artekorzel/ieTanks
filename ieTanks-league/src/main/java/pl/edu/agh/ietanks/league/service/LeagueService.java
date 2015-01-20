@@ -1,19 +1,28 @@
 package pl.edu.agh.ietanks.league.service;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.extern.java.Log;
-import org.springframework.stereotype.Component;
+import org.springframework.scheduling.TaskScheduler;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.*;
 
 @Log
-@Component
 public class LeagueService {
-
     private final Map<LeagueId, League> leagues = Maps.newConcurrentMap();
+    private final TaskScheduler scheduler;
+    private final RoundExecutorFactory executorFactory;
+
+    public LeagueService(TaskScheduler scheduler, RoundExecutorFactory executorFactory) {
+        this.scheduler = scheduler;
+        this.executorFactory = executorFactory;
+    }
+
+    private static Date toDate(LocalDateTime dateTime) {
+        return Date.from(dateTime.atZone(ZoneId.of("UTC")).toInstant());
+    }
 
     public LeagueId startLeague(LeagueDefinition leagueDefinition) {
         log.info("League started!");
@@ -28,6 +37,21 @@ public class LeagueService {
                 .build();
 
         leagues.put(id, league);
+
+        final RoundExecutor executor = executorFactory.createRoundExecutor(
+                leagueDefinition.boardId(), leagueDefinition.players());
+
+        List<LocalDateTime> roundsDateTimes = Lists.newArrayList();
+        for (int i = 0; i < leagueDefinition.gamesNumber(); ++i) {
+            LocalDateTime roundDateTime = leagueDefinition.firstGameDatetime().plus(
+                    leagueDefinition.interval().toDuration().multipliedBy(i));
+            roundsDateTimes.add(roundDateTime);
+        }
+
+        for (LocalDateTime roundDateTime : roundsDateTimes) {
+            scheduler.schedule(executor, toDate(roundDateTime));
+        }
+
         return id;
     }
 

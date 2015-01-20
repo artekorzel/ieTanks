@@ -1,7 +1,6 @@
 package pl.edu.agh.ietanks.sandbox.simple;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import org.springframework.stereotype.Service;
 import pl.edu.agh.ietanks.gameplay.game.api.BotAlgorithm;
 import pl.edu.agh.ietanks.gameplay.game.api.BotId;
@@ -28,7 +27,7 @@ public class SimpleBotService implements BotService {
 
     @Override
     public BotAlgorithm fetch(BotId botId) {
-        return algorithms.stream().filter(bot -> bot.id() == botId).findFirst().orElse(null);
+        return algorithms.stream().filter(bot -> bot.id().equals(botId)).findFirst().orElse(null);
     }
 
     @Override
