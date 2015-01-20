@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableList;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
@@ -18,7 +20,7 @@ import static org.fest.assertions.Assertions.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(
-        classes = SchedulerConfiguration.class,
+        classes = {LeagueServiceTest.ExternalModulesTestConfiguration.class, SchedulerConfiguration.class},
         loader = AnnotationConfigContextLoader.class)
 
 public class LeagueServiceTest {
@@ -29,13 +31,12 @@ public class LeagueServiceTest {
             .build();
     private static final LeagueDefinition LEAGUE_DEFINITION = LeagueDefinition.builder()
             .gamesNumber(1)
+            .boardId("1")
             .interval(EVERY_TWO_SECONDS)
             .firstGameDatetime(ZonedDateTime.now())
-            .players(ImmutableList.of("mequrel", "adebski"))
+            .players(ImmutableList.of("some-bot", "some-other-bot"))
             .build();
     private static final String ONE_USER_TO_RULE_THEM_ALL = "mequrel";
-
-
     @Autowired
     private LeagueService leagueService;
 
@@ -62,5 +63,10 @@ public class LeagueServiceTest {
         assertThat(league.isActive()).isFalse();
         assertThat(league.playedGames()).isEqualTo(1);
         assertThat(league.allGames()).isEqualTo(1);
+    }
+
+    @Configuration
+    @ComponentScan(basePackages = "pl.edu.agh.ietanks")
+    static class ExternalModulesTestConfiguration {
     }
 }
