@@ -1,6 +1,7 @@
 package pl.edu.agh.ietanks.league.rest;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import pl.edu.agh.ietanks.league.service.League;
 
 public class LeagueDTO {
     private final String id;
@@ -17,6 +18,17 @@ public class LeagueDTO {
         this.nextScheduledGame = nextScheduledGame;
         this.allGames = allGames;
         this.playedGames = playedGames;
+    }
+
+    public static LeagueDTO from(League league) {
+        return new LeagueDTO(
+                league.id(),
+                league.isActive(),
+                league.authorId(),
+                league.nextScheduledGame().toString(),
+                league.allGames(),
+                league.playedGames()
+        );
     }
 
     @JsonProperty("id")
