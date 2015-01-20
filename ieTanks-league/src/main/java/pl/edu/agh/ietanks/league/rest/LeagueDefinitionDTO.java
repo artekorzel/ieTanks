@@ -3,13 +3,15 @@ package pl.edu.agh.ietanks.league.rest;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
+import lombok.extern.java.Log;
 import pl.edu.agh.ietanks.league.service.LeagueDefinition;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 
+@Log
 public class LeagueDefinitionDTO {
     private final int gamesNumber;
     private final IntervalDTO interval;
@@ -58,7 +60,7 @@ public class LeagueDefinitionDTO {
                 .boardId(boardId)
                 .players(ImmutableList.copyOf(players))
                 .interval(interval.toInterval())
-                .firstGameDatetime(LocalDateTime.parse(firstGameDatetime, DateTimeFormatter.ISO_DATE_TIME))
+                .firstGameDatetime(ZonedDateTime.parse(firstGameDatetime, DateTimeFormatter.ISO_DATE_TIME))
                 .build();
     }
 }

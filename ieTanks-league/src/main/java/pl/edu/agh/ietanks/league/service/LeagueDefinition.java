@@ -5,7 +5,7 @@ import lombok.Value;
 import lombok.experimental.Accessors;
 import lombok.experimental.Builder;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Builder
 @Value
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class LeagueDefinition {
     private final int gamesNumber;
     private final Interval interval;
-    private final LocalDateTime firstGameDatetime;
+    private final ZonedDateTime firstGameDatetime;
     private final String boardId;
     private final ImmutableList<String> players;
 }

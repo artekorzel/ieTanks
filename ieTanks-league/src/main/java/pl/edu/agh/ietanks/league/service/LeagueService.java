@@ -5,8 +5,7 @@ import com.google.common.collect.Maps;
 import lombok.extern.java.Log;
 import org.springframework.scheduling.TaskScheduler;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 @Log
@@ -20,8 +19,8 @@ public class LeagueService {
         this.executorFactory = executorFactory;
     }
 
-    private static Date toDate(LocalDateTime dateTime) {
-        return Date.from(dateTime.atZone(ZoneId.of("UTC")).toInstant());
+    private static Date toDate(ZonedDateTime dateTime) {
+        return Date.from(dateTime.toInstant());
     }
 
     public LeagueId startLeague(LeagueDefinition leagueDefinition) {
@@ -41,15 +40,16 @@ public class LeagueService {
         final RoundExecutor executor = executorFactory.createRoundExecutor(
                 leagueDefinition.boardId(), leagueDefinition.players());
 
-        List<LocalDateTime> roundsDateTimes = Lists.newArrayList();
+        List<ZonedDateTime> roundsDateTimes = Lists.newArrayList();
         for (int i = 0; i < leagueDefinition.gamesNumber(); ++i) {
-            LocalDateTime roundDateTime = leagueDefinition.firstGameDatetime().plus(
+            ZonedDateTime roundDateTime = leagueDefinition.firstGameDatetime().plus(
                     leagueDefinition.interval().toDuration().multipliedBy(i));
             roundsDateTimes.add(roundDateTime);
         }
 
-        for (LocalDateTime roundDateTime : roundsDateTimes) {
+        for (ZonedDateTime roundDateTime : roundsDateTimes) {
             scheduler.schedule(executor, toDate(roundDateTime));
+            log.info("Round scheduled for: " + toDate(roundDateTime));
         }
 
         return id;

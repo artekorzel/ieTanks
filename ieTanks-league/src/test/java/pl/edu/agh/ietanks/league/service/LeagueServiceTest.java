@@ -9,7 +9,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import pl.edu.agh.ietanks.league.infrastructure.SchedulerConfiguration;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -30,7 +30,7 @@ public class LeagueServiceTest {
     private static final LeagueDefinition LEAGUE_DEFINITION = LeagueDefinition.builder()
             .gamesNumber(1)
             .interval(EVERY_TWO_SECONDS)
-            .firstGameDatetime(LocalDateTime.now())
+            .firstGameDatetime(ZonedDateTime.now())
             .players(ImmutableList.of("mequrel", "adebski"))
             .build();
     private static final String ONE_USER_TO_RULE_THEM_ALL = "mequrel";

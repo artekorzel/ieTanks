@@ -4,7 +4,7 @@ import lombok.Value;
 import lombok.experimental.Accessors;
 import lombok.experimental.Builder;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Builder
 @Value
@@ -13,7 +13,7 @@ public class League {
     private final String id;
     private final boolean isActive;
     private final String authorId;
-    private final LocalDateTime nextScheduledGame;
+    private final ZonedDateTime nextScheduledGame;
     private final int allGames;
     private final int playedGames;
 }
