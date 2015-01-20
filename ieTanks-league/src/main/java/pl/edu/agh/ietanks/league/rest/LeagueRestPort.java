@@ -9,6 +9,7 @@ import pl.edu.agh.ietanks.league.service.LeagueId;
 import pl.edu.agh.ietanks.league.service.LeagueService;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -20,7 +21,7 @@ public class LeagueRestPort {
     @Autowired
     private LeagueService leagueService;
 
-    private static <T, U> List<T> transform(List<U> collection, Function<U, T> func) {
+    private static <T, U> List<T> transform(Collection<U> collection, Function<U, T> func) {
         return collection.stream().map(func).collect(Collectors.toList());
     }
 
@@ -44,7 +45,7 @@ public class LeagueRestPort {
 
     @RequestMapping("/league")
     public List<LeagueDTO> getAllLeagues() {
-        List<League> leagues = leagueService.fetchAll();
+        Collection<League> leagues = leagueService.fetchAll();
         return transform(leagues, LeagueDTO::from);
     }
 

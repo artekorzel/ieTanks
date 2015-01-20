@@ -1,35 +1,41 @@
 package pl.edu.agh.ietanks.league.service;
 
+import com.google.common.collect.Maps;
 import lombok.extern.java.Log;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 @Log
 @Component
 public class LeagueService {
 
-    public void startLeague(LeagueDefinition leagueDefinition) {
+    private final Map<LeagueId, League> leagues = Maps.newConcurrentMap();
+
+    public LeagueId startLeague(LeagueDefinition leagueDefinition) {
         log.info("League started!");
+
+        LeagueId id = LeagueId.of(UUID.randomUUID());
+        League league = League.builder()
+                .allGames(leagueDefinition.gamesNumber())
+                .playedGames(leagueDefinition.gamesNumber())
+                .authorId("mequrel")
+                .isActive(false)
+                .id(id.toString())
+                .build();
+
+        leagues.put(id, league);
+        return id;
     }
 
     public Optional<League> fetchLeague(LeagueId leagueId) {
-        return Optional.empty();
+        return Optional.ofNullable(leagues.get(leagueId));
     }
 
-    public List<League> fetchAll() {
-        return Arrays.asList(
-                League.builder()
-                        .id("644e1dd7-2a7f-18fb-b8ed-ed78c3f92c2b")
-                        .authorId("mequrel")
-                        .allGames(10)
-                        .playedGames(6)
-                        .isActive(true)
-                        .nextScheduledGame(LocalDateTime.now())
-                        .build()
-        );
+    public Collection<League> fetchAll() {
+        return leagues.values();
     }
 }
