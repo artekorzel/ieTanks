@@ -9,15 +9,20 @@ import pl.edu.agh.ietanks.league.service.LeagueId;
 import pl.edu.agh.ietanks.league.service.LeagueService;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Log
 @RestController
 public class LeagueRestPort {
     @Autowired
     private LeagueService leagueService;
+
+    private static <T, U> List<T> transform(List<U> collection, Function<U, T> func) {
+        return collection.stream().map(func).collect(Collectors.toList());
+    }
 
     @RequestMapping(value = "/league", method = RequestMethod.POST)
     public void startLeague(@RequestBody LeagueDefinitionDTO league) {
@@ -27,7 +32,7 @@ public class LeagueRestPort {
 
     @RequestMapping("/league/{id}")
     public Optional<LeagueDTO> getLeague(@ModelAttribute("id") String id, HttpServletResponse response) {
-        Optional<League> leagueOption = leagueService.fetchGame(LeagueId.of(id));
+        Optional<League> leagueOption = leagueService.fetchLeague(LeagueId.of(id));
 
         if (!leagueOption.isPresent()) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -39,8 +44,8 @@ public class LeagueRestPort {
 
     @RequestMapping("/league")
     public List<LeagueDTO> getAllLeagues() {
-        log.info("GET");
-        return Collections.emptyList();
+        List<League> leagues = leagueService.fetchAll();
+        return transform(leagues, LeagueDTO::from);
     }
 
 
