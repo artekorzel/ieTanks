@@ -79,57 +79,56 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
         };
 
         events = [{
-            players: [{playerId: 'blabla', action: 'move', x: '10', y: '5'}, {
+            players: [{playerId: 'blabla', action: 'move', x: '10', y: '5', dirX:1, dirY:0}, {
                 playerId: 'blabla2',
                 action: 'move',
                 x: '3',
-                y: '2'
+                y: '2', dirX:-1, dirY:0
             }], missiles: []
         },
             {
-                players: [{playerId: 'blabla', action: 'move', x: '6', y: '2'}, {
+                players: [{playerId: 'blabla', action: 'move', x: '6', y: '2', dirX: -1, dirY:-1}, {
                     playerId: 'blabla2',
                     action: 'move',
                     x: '11',
-                    y: '2'
+                    y: '2', dirX: 1, dirY:0
                 }], missiles: []
             },
             {
-                players: [{playerId: 'blabla', action: 'move', x: '14', y: '19'}, {
+                players: [{playerId: 'blabla', action: 'move', x: '14', y: '19', dirX:1, dirY:1}, {
                     playerId: 'blabla2',
                     action: 'move',
                     x: '5',
-                    y: '5'
+                    y: '5', dirX:-1, dirY:-1
                 }], missiles: []
             },
             {
-                players: [{playerId: 'blabla', action: 'move', x: '0', y: '16'}, {
+                players: [{playerId: 'blabla', action: 'move', x: '0', y: '16', dirX: -1, dirY:1}, {
                     playerId: 'blabla2',
                     action: 'move',
                     x: '7',
-                    y: '0'
+                    y: '0', dirX: 1, dirY:1
                 }], missiles: []
             },
             {
-                players: [{playerId: 'blabla', action: 'move', x: '0', y: '14'}, {
+                players: [{playerId: 'blabla', action: 'move', x: '0', y: '14', dirX: -1, dirY:1}, {
                     playerId: 'blabla2',
                     action: 'shoot',
                     x: '7',
-                    y: '0'
-                }], missiles: [{playerId: 'blabla2', missileId: '1', x: '5', y: '4'}]
+                    y: '0', dirX:0, dirY:0
+                }], missiles: [{playerId: 'blabla2', missileId: '1', x: '7', y: '1', dirX:0, dirY:-1}]
             },
             {
-                players: [{playerId: 'blabla', action: 'move', x: '5', y: '12'}, {
+                players: [{playerId: 'blabla', action: 'move', x: '5', y: '12', dirX:1, dirY:1}, {
                     playerId: 'blabla2',
                     action: 'move',
                     x: '0',
-                    y: '10'
-                }], missiles: [{playerId: 'blabla2', missileId: '1', x: '5', y: '12'}]
+                    y: '10', dirX:-1, dirY:-1
+                }], missiles: [{playerId: 'blabla2', missileId: '1', x: '5', y: '12', dirX:-1, dirY:-1}]
             },
-            {players: [{playerId: 'blabla2', action: 'move', x: '7', y: '12'}], missiles: []},
-            {players: [{playerId: 'blabla2', action: 'move', x: '0', y: '0'}], missiles: []}];
+            {players: [{playerId: 'blabla2', action: 'move', x: '7', y: '12', dirX:1, dirY:-1}], missiles: []},
+            {players: [{playerId: 'blabla2', action: 'move', x: '0', y: '0', dirX:-1, dirY:1}], missiles: []}];
 
-        var ind = 0;
         var changeMap = false;
         $scope.gameLength = events.length;
         $interval(function () {
@@ -179,6 +178,10 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
                 var mapTileSize = 128;
                 var game, ratio, scale, scaledGrid, players, missiles, obstacles, mapScale, scaledMapGrid, leadGrid;
 
+                var directionMap = {1: {"-1":135, 0 : 90, "1": 45},
+                                0: {"-1": 180, 0: undefined, "1": 0 },
+                                "-1": {"-1": 225, 0: 270, "1": 315}};
+
                 var Player = function (id, tank, turret, direction, color) {
                     this.id = id;
                     this.element = tank;
@@ -194,8 +197,10 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
                 };
 
                 var createPlayer = function (id, x, y) {
-                    var tank = game.add.sprite(x * scaledGrid, y * scaledGrid, 'tank');
+                    var tank = game.add.sprite((x+0.5) * scaledGrid, (y+0.5) * scaledGrid, 'tank');
                     var turret = game.add.sprite(0, 0, 'turret');
+                    turret.anchor.setTo(0.5, 0.5);
+                    tank.anchor.setTo(0.5, 0.5);
                     tank.addChild(turret);
                     tank.scale.x = scale;
                     tank.scale.y = scale;
@@ -206,18 +211,49 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
                 };
 
                 var createMissile = function (id, x, y, color) {
-                    var bullet = game.add.sprite(x * scaledGrid, y * scaledGrid, 'bullet');
+                    var bullet = game.add.sprite((x+0.5) * scaledGrid, (y+0.5) * scaledGrid, 'bullet');
+                    bullet.anchor.setTo(0.5, 0.5);
                     bullet.scale.x = scale;
                     bullet.scale.y = scale;
                     bullet.tint = color;
                     return new Missile(id, bullet, 0);
                 };
 
-                Missile.prototype.moveTo = Player.prototype.moveTo = function (x, y) {
-                    game.add.tween(this.element).to({
-                        x: Math.floor(tileSize * scale) * x,
-                        y: Math.floor(tileSize * scale) * y
-                    }, 500, Phaser.Easing.Quadratic.InOut, true);
+                var sameAngles = function(angle1, angle2) {
+                    return angle1 == angle2 || angle1 - angle2 == 360 || angle1 - angle2 == -360
+                };
+
+                Missile.prototype.moveTo = Player.prototype.moveTo = function (x, y, dirX, dirY) {
+                    var newAngle = directionMap[dirX][dirY];
+                    if(newAngle - this.element.angle > 180) {
+                        newAngle = newAngle - 360;
+                    }
+
+                    var newPosition = {
+                        x: Math.floor(tileSize * scale) * (Number(x) + 0.5),
+                        y: Math.floor(tileSize * scale) * (Number(y) + 0.5)};
+
+                    if(newAngle === undefined ||  sameAngles(newAngle, this.element.angle)) {
+                        game.add.tween(this.element)
+                            .to(newPosition, 500, Phaser.Easing.Quadratic.InOut, true);
+                    } else {
+
+                        game.add.tween(this.element)
+                            .to({angle: newAngle}, 300, Phaser.Easing.Linear.InOut, true)
+                            .to(newPosition, 500, Phaser.Easing.Quadratic.InOut, true);
+                    }
+                };
+
+                Player.prototype.turnTurret = function(dirX, dirY) {
+                    var newAngle = directionMap[dirX][dirY] - Number(this.element.angle);
+                    if(newAngle - this.element.angle > 180) {
+                        newAngle = newAngle - 360;
+                    }
+
+                    if(newAngle !== undefined && !sameAngles(newAngle, this.element.angle)) {
+                        game.add.tween(this.turret)
+                            .to({angle: newAngle}, 300, Phaser.Easing.Linear.InOut, true);
+                    }
                 };
 
                 var removeOldItems = function (itemsSet, identifiers) {
@@ -377,7 +413,7 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
                         if (!players.hasOwnProperty(state.playerId)) {
                             players[state.playerId] = createPlayer(state.playerId, state.x, state.y);
                         }
-                        players[state.playerId].moveTo(state.x, state.y);
+                        players[state.playerId].moveTo(state.x, state.y, state.dirX, state.dirY);
                     });
 
 
@@ -386,13 +422,14 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
                             var missile_color;
                             if (players.hasOwnProperty(state.playerId)) {
                                 missile_color = players[state.playerId].color;
+                                players[state.playerId].turnTurret(state.dirX, state.dirY);
                             }
                             else {
                                 missile_color = Phaser.Color.getRandomColor();
                             }
                             missiles[state.missileId] = createMissile(state.missileId, state.x, state.y, missile_color);
                         }
-                        missiles[state.missileId].moveTo(state.x, state.y);
+                        missiles[state.missileId].moveTo(state.x, state.y, state.dirX, state.dirY);
                     });
 
                     players = removeOldItems(players, state['players'].map(function (state) {
