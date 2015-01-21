@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.extern.java.Log;
 import org.springframework.scheduling.TaskScheduler;
+import pl.edu.agh.ietanks.league.external.UserService;
 
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -13,10 +14,12 @@ public class LeagueService {
     private final Map<LeagueId, League> leagues = Maps.newConcurrentMap();
     private final TaskScheduler scheduler;
     private final RoundExecutorFactory executorFactory;
+    private final UserService userService;
 
-    public LeagueService(TaskScheduler scheduler, RoundExecutorFactory executorFactory) {
+    public LeagueService(TaskScheduler scheduler, RoundExecutorFactory executorFactory, UserService userService) {
         this.scheduler = scheduler;
         this.executorFactory = executorFactory;
+        this.userService = userService;
     }
 
     private static Date toDate(ZonedDateTime dateTime) {
@@ -30,7 +33,7 @@ public class LeagueService {
         League league = League.builder()
                 .allGames(leagueDefinition.gamesNumber())
                 .playedGames(leagueDefinition.gamesNumber())
-                .authorId("mequrel")
+                .authorId(userService.currentUser())
                 .isActive(false)
                 .id(id.toString())
                 .build();

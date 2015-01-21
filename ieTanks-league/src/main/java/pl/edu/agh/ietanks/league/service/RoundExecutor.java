@@ -5,6 +5,7 @@ import lombok.extern.java.Log;
 import pl.edu.agh.ietanks.bot.api.BotId;
 import pl.edu.agh.ietanks.gameplay.game.api.GameId;
 import pl.edu.agh.ietanks.gameplay.game.api.GamePlay;
+import pl.edu.agh.ietanks.league.external.RankingService;
 
 import java.util.List;
 import java.util.stream.Collectors;

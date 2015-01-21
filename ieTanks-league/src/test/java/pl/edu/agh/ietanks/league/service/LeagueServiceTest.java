@@ -11,6 +11,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import pl.edu.agh.ietanks.gameplay.game.api.GameId;
 import pl.edu.agh.ietanks.gameplay.game.api.GamePlay;
+import pl.edu.agh.ietanks.league.external.RankingService;
+import pl.edu.agh.ietanks.league.external.UserService;
 import pl.edu.agh.ietanks.league.infrastructure.SchedulerConfiguration;
 
 import java.time.ZonedDateTime;
@@ -79,6 +81,11 @@ public class LeagueServiceTest {
         @Bean
         public RankingService createRankingService() {
             return new RankingService();
+        }
+
+        @Bean
+        public UserService createUserService() {
+            return new UserService();
         }
     }
 }
