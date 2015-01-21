@@ -39,40 +39,51 @@ public class LeagueService {
     }
 
     public LeagueId startLeague(LeagueDefinition leagueDefinition) {
-        if (leagueDefinition.players().isEmpty()) {
-            log.warning("No bots available for this round for players: " + leagueDefinition.players());
-        }
+        ensureItIsPossibleToStart(leagueDefinition);
 
         final String authorId = userService.currentUser();
         final LeagueState league = leagueRepository.createLeague(authorId);
         final RankingId rankingId = rankingService.createRanking();
 
         List<ZonedDateTime> roundsDateTimes = calculateRoundDateTimes(leagueDefinition);
-
-        for (ZonedDateTime roundDateTime : roundsDateTimes) {
-            final LeagueState.RoundId roundId = league.createRound(roundDateTime);
-
-            final Consumer<GameId> onGameFinished = (GameId gameId) -> {
-                league.finishRound(roundId);
-                rankingService.addGameToRanking(rankingId, gameId);
-            };
-
-            final Runnable task = () -> {
-                final GameId gameId = gameplayService.startNewGameplay(
-                        leagueDefinition.boardId(),
-                        leagueDefinition.players(),
-                        onGameFinished);
-
-                league.startRound(roundId);
-                log.info("Game " + gameId + " started");
-            };
-
-            scheduler.schedule(task, toDate(roundDateTime));
-            log.info("Round scheduled for: " + toDate(roundDateTime));
-        }
+        scheduleRounds(leagueDefinition, league, rankingId, roundsDateTimes);
 
         log.info("League started!");
         return league.id();
+    }
+
+    private void ensureItIsPossibleToStart(LeagueDefinition leagueDefinition) {
+        if (leagueDefinition.players().isEmpty()) {
+            log.warning("No bots available for this round for players: " + leagueDefinition.players());
+        }
+    }
+
+    private void scheduleRounds(LeagueDefinition leagueDefinition, LeagueState league, RankingId rankingId, List<ZonedDateTime> roundsDateTimes) {
+        for (ZonedDateTime roundDateTime : roundsDateTimes) {
+            scheduleSingleRound(leagueDefinition, league, rankingId, roundDateTime);
+        }
+    }
+
+    private void scheduleSingleRound(LeagueDefinition leagueDefinition, LeagueState league, RankingId rankingId, ZonedDateTime roundDateTime) {
+        final LeagueState.RoundId roundId = league.createRound(roundDateTime);
+
+        final Consumer<GameId> onGameFinished = (GameId gameId) -> {
+            league.finishRound(roundId);
+            rankingService.addGameToRanking(rankingId, gameId);
+        };
+
+        final Runnable task = () -> {
+            final GameId gameId = gameplayService.startNewGameplay(
+                    leagueDefinition.boardId(),
+                    leagueDefinition.players(),
+                    onGameFinished);
+
+            league.startRound(roundId);
+            log.info("Game " + gameId + " started");
+        };
+
+        scheduler.schedule(task, toDate(roundDateTime));
+        log.info("Round scheduled for: " + toDate(roundDateTime));
     }
 
     public Optional<League> fetchLeague(LeagueId leagueId) {

@@ -21,11 +21,14 @@ public class LeagueDTO {
     }
 
     public static LeagueDTO from(League league) {
+        String nextGame = league.nextScheduledGame() == null ?
+                "" : league.nextScheduledGame().toString();
+
         return new LeagueDTO(
                 league.id().toString(),
                 league.isActive(),
                 league.authorId(),
-                league.nextScheduledGame().toString(),
+                nextGame,
                 league.allGames(),
                 league.playedGames()
         );
