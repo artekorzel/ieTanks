@@ -4,11 +4,13 @@ import com.google.common.collect.ImmutableList;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
+import pl.edu.agh.ietanks.gameplay.game.api.GameId;
+import pl.edu.agh.ietanks.gameplay.game.api.GamePlay;
 import pl.edu.agh.ietanks.league.infrastructure.SchedulerConfiguration;
 
 import java.time.ZonedDateTime;
@@ -66,7 +68,17 @@ public class LeagueServiceTest {
     }
 
     @Configuration
-    @ComponentScan(basePackages = "pl.edu.agh.ietanks")
     static class ExternalModulesTestConfiguration {
+        @Bean
+        public GamePlay createGamePlay() {
+            GameId gameId = new GameId("gameId");
+
+            return new GamePlayStub(gameId);
+        }
+
+        @Bean
+        public RankingService createRankingService() {
+            return new RankingService();
+        }
     }
 }

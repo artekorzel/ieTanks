@@ -8,9 +8,9 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import pl.edu.agh.ietanks.boards.model.Board;
 import pl.edu.agh.ietanks.boards.model.Field;
+import pl.edu.agh.ietanks.bot.api.BotAlgorithm;
+import pl.edu.agh.ietanks.bot.api.BotId;
 import pl.edu.agh.ietanks.engine.api.EngineFactory;
-import pl.edu.agh.ietanks.gameplay.game.api.BotAlgorithm;
-import pl.edu.agh.ietanks.gameplay.game.api.BotId;
 import pl.edu.agh.ietanks.gameplay.game.api.GameHistory;
 
 import java.util.Collections;

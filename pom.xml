@@ -12,9 +12,11 @@
     <modules>
         <module>ieTanks-server</module>
         <module>ieTanks-boards</module>
+        <module>ieTanks-bot</module>
         <module>ieTanks-engine</module>
         <module>ieTanks-gameplay</module>
         <module>ieTanks-sandbox</module>
+        <module>ieTanks-utils</module>
         <module>ieTanks-league</module>
     </modules>
 
