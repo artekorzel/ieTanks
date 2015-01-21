@@ -27,34 +27,14 @@ public class LeagueService {
     }
 
     public LeagueId startLeague(LeagueDefinition leagueDefinition) {
-        log.info("League started!");
-
         LeagueId id = LeagueId.of(UUID.randomUUID());
-        League league = League.builder()
-                .allGames(leagueDefinition.gamesNumber())
-                .playedGames(leagueDefinition.gamesNumber())
-                .authorId(userService.currentUser())
-                .isActive(false)
-                .id(id.toString())
-                .build();
-
+        League league = createLeague(leagueDefinition, id);
         leagues.put(id, league);
 
-        final RoundExecutor executor = executorFactory.createRoundExecutor(
-                leagueDefinition.boardId(), leagueDefinition.players());
+        List<ZonedDateTime> roundsDateTimes = calculateRoundDateTimes(leagueDefinition);
+        scheduleRounds(leagueDefinition, roundsDateTimes);
 
-        List<ZonedDateTime> roundsDateTimes = Lists.newArrayList();
-        for (int i = 0; i < leagueDefinition.gamesNumber(); ++i) {
-            ZonedDateTime roundDateTime = leagueDefinition.firstGameDatetime().plus(
-                    leagueDefinition.interval().toDuration().multipliedBy(i));
-            roundsDateTimes.add(roundDateTime);
-        }
-
-        for (ZonedDateTime roundDateTime : roundsDateTimes) {
-            scheduler.schedule(executor, toDate(roundDateTime));
-            log.info("Round scheduled for: " + toDate(roundDateTime));
-        }
-
+        log.info("League started!");
         return id;
     }
 
@@ -64,5 +44,35 @@ public class LeagueService {
 
     public Collection<League> fetchAll() {
         return leagues.values();
+    }
+
+    private void scheduleRounds(LeagueDefinition leagueDefinition, List<ZonedDateTime> roundsDateTimes) {
+        final RoundExecutor executor = executorFactory.createRoundExecutor(
+                leagueDefinition.boardId(), leagueDefinition.players());
+
+        for (ZonedDateTime roundDateTime : roundsDateTimes) {
+            scheduler.schedule(executor, toDate(roundDateTime));
+            log.info("Round scheduled for: " + toDate(roundDateTime));
+        }
+    }
+
+    private List<ZonedDateTime> calculateRoundDateTimes(LeagueDefinition leagueDefinition) {
+        List<ZonedDateTime> roundsDateTimes = Lists.newArrayList();
+        for (int i = 0; i < leagueDefinition.gamesNumber(); ++i) {
+            ZonedDateTime roundDateTime = leagueDefinition.firstGameDatetime().plus(
+                    leagueDefinition.interval().toDuration().multipliedBy(i));
+            roundsDateTimes.add(roundDateTime);
+        }
+        return roundsDateTimes;
+    }
+
+    private League createLeague(LeagueDefinition leagueDefinition, LeagueId id) {
+        return League.builder()
+                .allGames(leagueDefinition.gamesNumber())
+                .playedGames(leagueDefinition.gamesNumber())
+                .authorId(userService.currentUser())
+                .isActive(false)
+                .id(id.toString())
+                .build();
     }
 }
