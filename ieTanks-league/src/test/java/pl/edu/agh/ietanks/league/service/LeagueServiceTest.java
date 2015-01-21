@@ -9,12 +9,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
+import pl.edu.agh.ietanks.bot.api.BotId;
 import pl.edu.agh.ietanks.gameplay.game.api.GameId;
 import pl.edu.agh.ietanks.gameplay.game.api.GamePlay;
 import pl.edu.agh.ietanks.league.external.RankingService;
 import pl.edu.agh.ietanks.league.external.UserService;
 import pl.edu.agh.ietanks.league.infrastructure.SchedulerConfiguration;
 
+import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.Optional;
@@ -35,12 +37,13 @@ public class LeagueServiceTest {
             .build();
     private static final LeagueDefinition LEAGUE_DEFINITION = LeagueDefinition.builder()
             .gamesNumber(1)
-            .boardId("1")
+            .boardId(1)
             .interval(EVERY_TWO_SECONDS)
-            .firstGameDatetime(ZonedDateTime.now())
-            .players(ImmutableList.of("some-bot", "some-other-bot"))
+            .firstGameDatetime(ZonedDateTime.now().plus(Duration.ofHours(1)))
+            .players(ImmutableList.of(new BotId("some-bot"), new BotId("some-other-bot")))
             .build();
     private static final String ONE_USER_TO_RULE_THEM_ALL = "mequrel";
+
     @Autowired
     private LeagueService leagueService;
 
@@ -63,9 +66,9 @@ public class LeagueServiceTest {
 
     private void checkLeague(LeagueId leagueId, League league) {
         assertThat(league.authorId()).isEqualTo(ONE_USER_TO_RULE_THEM_ALL);
-        assertThat(league.id()).isEqualTo(leagueId.toString());
-        assertThat(league.isActive()).isFalse();
-        assertThat(league.playedGames()).isEqualTo(1);
+        assertThat(league.id()).isEqualTo(leagueId);
+        assertThat(league.isActive()).isTrue();
+        assertThat(league.playedGames()).isEqualTo(0);
         assertThat(league.allGames()).isEqualTo(1);
     }
 

@@ -22,7 +22,7 @@ public class LeagueDTO {
 
     public static LeagueDTO from(League league) {
         return new LeagueDTO(
-                league.id(),
+                league.id().toString(),
                 league.isActive(),
                 league.authorId(),
                 league.nextScheduledGame().toString(),

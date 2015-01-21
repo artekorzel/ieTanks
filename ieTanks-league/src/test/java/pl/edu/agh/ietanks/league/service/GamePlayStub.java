@@ -5,6 +5,7 @@ import pl.edu.agh.ietanks.gameplay.game.api.GameId;
 import pl.edu.agh.ietanks.gameplay.game.api.GamePlay;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public class GamePlayStub implements GamePlay {
     private final GameId gameId;
@@ -14,7 +15,7 @@ public class GamePlayStub implements GamePlay {
     }
 
     @Override
-    public GameId startNewGameplay(int boardId, List<BotId> botIds) {
+    public GameId startNewGameplay(int boardId, List<BotId> botIds, Consumer<GameId> onGameFinished) {
         return gameId;
     }
 }

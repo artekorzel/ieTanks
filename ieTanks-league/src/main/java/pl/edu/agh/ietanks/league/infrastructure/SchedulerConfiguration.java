@@ -8,8 +8,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import pl.edu.agh.ietanks.gameplay.game.api.GamePlay;
 import pl.edu.agh.ietanks.league.external.RankingService;
 import pl.edu.agh.ietanks.league.external.UserService;
+import pl.edu.agh.ietanks.league.service.LeagueRepository;
 import pl.edu.agh.ietanks.league.service.LeagueService;
-import pl.edu.agh.ietanks.league.service.RoundExecutorFactory;
 
 @Configuration
 public class SchedulerConfiguration {
@@ -31,12 +31,13 @@ public class SchedulerConfiguration {
     }
 
     @Bean
-    public RoundExecutorFactory createExecutorFactory() {
-        return new RoundExecutorFactory(rankingService, gamePlayService);
+    public LeagueRepository createLeagueRepository() {
+        return new LeagueRepository();
     }
 
     @Bean
     public LeagueService createLeagueService() {
-        return new LeagueService(createTaskScheduler(), createExecutorFactory(), userService);
+        return new LeagueService(createTaskScheduler(), userService,
+                createLeagueRepository(), gamePlayService, rankingService);
     }
 }

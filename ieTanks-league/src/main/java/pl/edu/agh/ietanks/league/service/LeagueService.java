@@ -1,25 +1,37 @@
 package pl.edu.agh.ietanks.league.service;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import lombok.extern.java.Log;
 import org.springframework.scheduling.TaskScheduler;
+import pl.edu.agh.ietanks.gameplay.game.api.GameId;
+import pl.edu.agh.ietanks.gameplay.game.api.GamePlay;
+import pl.edu.agh.ietanks.league.external.RankingId;
+import pl.edu.agh.ietanks.league.external.RankingService;
 import pl.edu.agh.ietanks.league.external.UserService;
 
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @Log
 public class LeagueService {
-    private final Map<LeagueId, League> leagues = Maps.newConcurrentMap();
     private final TaskScheduler scheduler;
-    private final RoundExecutorFactory executorFactory;
     private final UserService userService;
+    private final LeagueRepository leagueRepository;
+    private final GamePlay gameplayService;
+    private final RankingService rankingService;
 
-    public LeagueService(TaskScheduler scheduler, RoundExecutorFactory executorFactory, UserService userService) {
+    public LeagueService(TaskScheduler scheduler, UserService userService, LeagueRepository leagueRepository,
+                         GamePlay gamePlayService, RankingService rankingService) {
         this.scheduler = scheduler;
-        this.executorFactory = executorFactory;
         this.userService = userService;
+        this.leagueRepository = leagueRepository;
+        this.gameplayService = gamePlayService;
+        this.rankingService = rankingService;
     }
 
     private static Date toDate(ZonedDateTime dateTime) {
@@ -27,33 +39,51 @@ public class LeagueService {
     }
 
     public LeagueId startLeague(LeagueDefinition leagueDefinition) {
-        LeagueId id = LeagueId.of(UUID.randomUUID());
-        League league = createLeague(leagueDefinition, id);
-        leagues.put(id, league);
+        if (leagueDefinition.players().isEmpty()) {
+            log.warning("No bots available for this round for players: " + leagueDefinition.players());
+        }
+
+        final String authorId = userService.currentUser();
+        final LeagueState league = leagueRepository.createLeague(authorId);
+        final RankingId rankingId = rankingService.createRanking();
 
         List<ZonedDateTime> roundsDateTimes = calculateRoundDateTimes(leagueDefinition);
-        scheduleRounds(leagueDefinition, roundsDateTimes);
+
+        for (ZonedDateTime roundDateTime : roundsDateTimes) {
+            final LeagueState.RoundId roundId = league.createRound(roundDateTime);
+
+            final Consumer<GameId> onGameFinished = (GameId gameId) -> {
+                league.finishRound(roundId);
+                rankingService.addGameToRanking(rankingId, gameId);
+            };
+
+            final Runnable task = () -> {
+                final GameId gameId = gameplayService.startNewGameplay(
+                        leagueDefinition.boardId(),
+                        leagueDefinition.players(),
+                        onGameFinished);
+
+                league.startRound(roundId);
+                log.info("Game " + gameId + " started");
+            };
+
+            scheduler.schedule(task, toDate(roundDateTime));
+            log.info("Round scheduled for: " + toDate(roundDateTime));
+        }
 
         log.info("League started!");
-        return id;
+        return league.id();
     }
 
     public Optional<League> fetchLeague(LeagueId leagueId) {
-        return Optional.ofNullable(leagues.get(leagueId));
+        final Optional<LeagueState> fetchedLeague = leagueRepository.fetchLeague(leagueId);
+        return fetchedLeague.map(LeagueState::toLeague);
     }
 
     public Collection<League> fetchAll() {
-        return leagues.values();
-    }
-
-    private void scheduleRounds(LeagueDefinition leagueDefinition, List<ZonedDateTime> roundsDateTimes) {
-        final RoundExecutor executor = executorFactory.createRoundExecutor(
-                leagueDefinition.boardId(), leagueDefinition.players());
-
-        for (ZonedDateTime roundDateTime : roundsDateTimes) {
-            scheduler.schedule(executor, toDate(roundDateTime));
-            log.info("Round scheduled for: " + toDate(roundDateTime));
-        }
+        return leagueRepository.fetchAll().stream()
+                .map(LeagueState::toLeague)
+                .collect(Collectors.toList());
     }
 
     private List<ZonedDateTime> calculateRoundDateTimes(LeagueDefinition leagueDefinition) {
@@ -64,15 +94,5 @@ public class LeagueService {
             roundsDateTimes.add(roundDateTime);
         }
         return roundsDateTimes;
-    }
-
-    private League createLeague(LeagueDefinition leagueDefinition, LeagueId id) {
-        return League.builder()
-                .allGames(leagueDefinition.gamesNumber())
-                .playedGames(leagueDefinition.gamesNumber())
-                .authorId(userService.currentUser())
-                .isActive(false)
-                .id(id.toString())
-                .build();
     }
 }

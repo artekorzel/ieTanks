@@ -14,6 +14,7 @@ import pl.edu.agh.ietanks.gameplay.game.api.GamePlay;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
 @Service
 public class SimpleGamePlay implements GamePlay {
@@ -43,17 +44,21 @@ public class SimpleGamePlay implements GamePlay {
     }
 
     //@Override
-    private GameId startGame(Board gameBoard, List<BotAlgorithm> bots) {
+    private GameId startGame(Board gameBoard, List<BotAlgorithm> bots, Consumer<GameId> onGameFinished) {
         final GameRunner gameRunner = gameRunnerFactory.create(gameBoard, bots);
-        executionService.execute(new LogExceptionRunnable(gameRunner));
+        executionService.execute(
+                new CallbackRunnable(new LogExceptionRunnable(gameRunner),
+                        () -> onGameFinished.accept(gameRunner.getId())
+                ));
+
         return gameRunner.getId();
     }
 
     @Override
-    public GameId startNewGameplay(int boardId, List<BotId> botIds) {
+    public GameId startNewGameplay(int boardId, List<BotId> botIds, Consumer<GameId> onGameFinished) {
         Board board = boardsReader.getBoard(boardId);
         List<BotAlgorithm> bots = botService.fetch(botIds);
 
-        return startGame(board, bots);
+        return startGame(board, bots, onGameFinished);
     }
 }

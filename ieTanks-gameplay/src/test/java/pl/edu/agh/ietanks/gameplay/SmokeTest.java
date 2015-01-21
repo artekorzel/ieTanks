@@ -17,6 +17,7 @@ import pl.edu.agh.ietanks.gameplay.game.api.GamePlay;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static org.fest.assertions.Assertions.assertThat;
@@ -24,6 +25,8 @@ import static org.fest.assertions.Assertions.assertThat;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({"classpath:test-context.xml"})
 public class SmokeTest {
+    private static Logger log = Logger.getLogger(SmokeTest.class.getName());
+
     @Autowired
     private GameHistory gameHistory;
 
@@ -40,7 +43,9 @@ public class SmokeTest {
         final List<BotId> botIds = Arrays.asList(new BotId("some-bot"), new BotId("some-other-bot"));
 
         //when
-        GameId gameId = gameService.startNewGameplay(1, botIds);
+        GameId gameId = gameService.startNewGameplay(1, botIds, (id) -> {
+            log.info("Game " + id + " finished successfully");
+        });
         Thread.sleep(10000);
 
         //then

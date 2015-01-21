@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -34,7 +36,7 @@ public class SimpleSandboxTest {
         GameId gameId = new GameId(UUID.randomUUID().toString());
         int boardId = 1;
         List<BotId> algorithmIds = Arrays.asList(new BotId("some-bot"), new BotId("some-other-bot"));
-        when(gamePlay.startNewGameplay(1, algorithmIds)).thenReturn(gameId);
+        when(gamePlay.startNewGameplay(eq(1), eq(algorithmIds), any())).thenReturn(gameId);
 
         //when
         GameId startedGameId = sandbox.startNewGameplay(boardId, algorithmIds);

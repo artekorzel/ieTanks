@@ -10,7 +10,7 @@ import java.time.ZonedDateTime;
 @Value
 @Accessors(fluent = true)
 public class League {
-    private final String id;
+    private final LeagueId id;
     private final boolean isActive;
     private final String authorId;
     private final ZonedDateTime nextScheduledGame;
