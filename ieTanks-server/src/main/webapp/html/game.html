@@ -2,11 +2,15 @@
     <div class="row">
         <div class="col-md-2">
             <div class="row">
+                <div class="row">
+                    <h2><span class="col-md-offset-1 col-md-10 label label-default" ng-if="selectedGame.gameId">Game shown: {{selectedGame.gameId}}</span></h2>
+                    <h2><span class="col-md-offset-1 col-md-10 label label-default" ng-if="!selectedGame">Select game</span></h2>
+                </div>
                 <div class="list-group" style="max-height:600px; overflow-x: scroll">
-                    <a class="list-group-item list-group-item-warning active">
-                        <h4 class="list-group-item-heading" ng-if="selectedGame.gameId">Game shown: {{selectedGame.gameId}}</h4>
-                        <h4 class="list-group-item-heading" ng-if="!selectedGame">Select game</h4>
-                    </a>
+                    <!--<a class="list-group-item list-group-item-warning active">-->
+                        <!--<h4 class="list-group-item-heading" ng-if="selectedGame.gameId">Game shown: {{selectedGame.gameId}}</h4>-->
+                        <!--<h4 class="list-group-item-heading" ng-if="!selectedGame">Select game</h4>-->
+                    <!--</a>-->
                     <a class="list-group-item" ng-repeat="game in games" ng-click="$parent.selected = game; $parent.selectedGame=game" ng-class="{active:selected==game}">{{game.gameId}}</a>
                 </div>
             </div>
