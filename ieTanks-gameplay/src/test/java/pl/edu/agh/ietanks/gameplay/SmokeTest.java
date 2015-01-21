@@ -43,7 +43,7 @@ public class SmokeTest {
         final List<BotId> botIds = Arrays.asList(new BotId("some-bot"), new BotId("some-other-bot"));
 
         //when
-        GameId gameId = gameService.startNewGameplay(1, botIds, (id) -> {
+        GameId gameId = gameService.startNewGameplay(board.getId(), botIds, (id) -> {
             log.info("Game " + id + " finished successfully");
         });
         Thread.sleep(10000);
