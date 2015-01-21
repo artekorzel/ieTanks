@@ -95,7 +95,7 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
                 }], missiles: []
             },
             {
-                players: [{playerId: 'blabla', action: 'move', x: '14', y: '19', dirX:1, dirY:1}, {
+                players: [{playerId: 'blabla', action: 'move', x: '14', y: '19', dirX:1, dirY:-1}, {
                     playerId: 'blabla2',
                     action: 'move',
                     x: '5',
@@ -174,7 +174,7 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
             link: function ($scope) {
 
                 var gameBorder = $scope.maximalBorder || 600, maximalWidth, maximalHeight;
-                var tileSize = 32;
+                var tileSize = 65;
                 var mapTileSize = 128;
                 var game, ratio, scale, scaledGrid, players, missiles, obstacles, mapScale, scaledMapGrid, leadGrid;
 
@@ -197,6 +197,8 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
                 };
 
                 var createPlayer = function (id, x, y) {
+                    x = Number(x);
+                    y = Number(y);
                     var tank = game.add.sprite((x+0.5) * scaledGrid, (y+0.5) * scaledGrid, 'tank');
                     var turret = game.add.sprite(0, 0, 'turret');
                     turret.anchor.setTo(0.5, 0.5);
@@ -211,6 +213,8 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
                 };
 
                 var createMissile = function (id, x, y, color) {
+                    x = Number(x);
+                    y = Number(y);
                     var bullet = game.add.sprite((x+0.5) * scaledGrid, (y+0.5) * scaledGrid, 'bullet');
                     bullet.anchor.setTo(0.5, 0.5);
                     bullet.scale.x = scale;
@@ -224,14 +228,16 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
                 };
 
                 Missile.prototype.moveTo = Player.prototype.moveTo = function (x, y, dirX, dirY) {
+                    x = Number(x);
+                    y = Number(y);
                     var newAngle = directionMap[dirX][dirY];
                     if(newAngle - this.element.angle > 180) {
                         newAngle = newAngle - 360;
                     }
 
                     var newPosition = {
-                        x: Math.floor(tileSize * scale) * (Number(x) + 0.5),
-                        y: Math.floor(tileSize * scale) * (Number(y) + 0.5)};
+                        x: Math.floor(tileSize * scale) * (x + 0.5),
+                        y: Math.floor(tileSize * scale) * (y + 0.5)};
 
                     if(newAngle === undefined ||  sameAngles(newAngle, this.element.angle)) {
                         game.add.tween(this.element)
@@ -291,8 +297,8 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
                     game.load.image('flower_11', 'assets/Flower (11).png');
                     game.load.image('flower_12', 'assets/Flower (12).png');
                     game.load.image('bullet', 'assets/bulletWhite.png');
-                    game.load.image('tank', 'assets/tankBaseWhite.png');
-                    game.load.image('turret', 'assets/tankTurretWhite.png');
+                    game.load.image('tank', 'assets/PanzerStrWhite.png');
+                    game.load.image('turret', 'assets/PanzerStrTurretWhite.png');
                     game.load.image('wall', 'assets/Stone_wall.png');
                     //  This sets a limit on the up-scale
                     game.scale.maxHeight = maximalHeight;
