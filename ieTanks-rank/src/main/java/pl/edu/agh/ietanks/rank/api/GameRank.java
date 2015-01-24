@@ -1,17 +1,31 @@
 package pl.edu.agh.ietanks.rank.api;
 
 import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GameRank {
 
-    private List<String> tankIds;
+    private RankId rankId;
+    private Map<Integer, TankRank> rank;
 
-    public GameRank(List<String> tankIds) {
-        this.tankIds = tankIds;
+    public GameRank() {
+        this(new HashMap<>());
     }
 
-    public List<String> getTankIds() {
-        return Collections.unmodifiableList(tankIds);
+    public GameRank(Map<Integer, TankRank> rank) {
+        this.rank = rank;
+    }
+
+    public RankId getRankId() {
+        return rankId;
+    }
+
+    public void setRankId(RankId rankId) {
+        this.rankId = rankId;
+    }
+
+    public Map<Integer, TankRank> getRank() {
+        return Collections.unmodifiableMap(rank);
     }
 }
