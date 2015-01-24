@@ -1,3 +1,14 @@
 a.list-group-item {
     cursor: pointer;
 }
+
+.float-right {
+    float: right;
+}
+
+label.ellipsis {
+    width: 160px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
