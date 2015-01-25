@@ -3,12 +3,12 @@ package pl.edu.agh.ietanks.gameplay.bot;
 import org.python.core.PyObject;
 import org.python.core.PyString;
 import org.python.util.PythonInterpreter;
+import pl.edu.agh.ietanks.bot.api.BotId;
 import pl.edu.agh.ietanks.engine.api.Action;
 import pl.edu.agh.ietanks.engine.api.Bot;
 import pl.edu.agh.ietanks.engine.api.GameplayBoardView;
 import pl.edu.agh.ietanks.gameplay.bot.api.adapters.BoardAdapter;
 import pl.edu.agh.ietanks.gameplay.bot.api.converters.ActionConverter;
-import pl.edu.agh.ietanks.gameplay.game.api.BotId;
 
 public class BotExecutor implements Bot {
 

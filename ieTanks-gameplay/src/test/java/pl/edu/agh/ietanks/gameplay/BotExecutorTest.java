@@ -1,6 +1,8 @@
 package pl.edu.agh.ietanks.gameplay;
 
 import org.junit.Test;
+import pl.edu.agh.ieTanks.utils.ResourceUtils;
+import pl.edu.agh.ietanks.bot.api.BotId;
 import pl.edu.agh.ietanks.engine.api.Action;
 import pl.edu.agh.ietanks.engine.api.BoardDefinition;
 import pl.edu.agh.ietanks.engine.api.Direction;
@@ -8,8 +10,6 @@ import pl.edu.agh.ietanks.engine.api.Position;
 import pl.edu.agh.ietanks.engine.simple.BoardState;
 import pl.edu.agh.ietanks.engine.simple.actions.Shot;
 import pl.edu.agh.ietanks.gameplay.bot.BotExecutor;
-import pl.edu.agh.ietanks.gameplay.game.api.BotId;
-import pl.edu.agh.ietanks.gameplay.utils.ResourceUtils;
 
 import java.io.IOException;
 import java.util.Arrays;

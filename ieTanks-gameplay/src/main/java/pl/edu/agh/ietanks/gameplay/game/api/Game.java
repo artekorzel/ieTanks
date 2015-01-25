@@ -1,6 +1,7 @@
 package pl.edu.agh.ietanks.gameplay.game.api;
 
 import pl.edu.agh.ietanks.boards.model.Board;
+import pl.edu.agh.ietanks.bot.api.BotAlgorithm;
 import pl.edu.agh.ietanks.engine.api.Position;
 import pl.edu.agh.ietanks.engine.api.events.Event;
 
