@@ -1,10 +1,10 @@
-package pl.edu.agh.ietanks.rank.api;
+package pl.edu.agh.ietanks.ranking.api;
 
-public class RankId {
+public class RankingId {
 
     private String id;
 
-    public RankId(String id) {
+    public RankingId(String id) {
         this.id = id;
     }
 
@@ -17,8 +17,8 @@ public class RankId {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        RankId rankId = (RankId) o;
-        return id.equals(rankId.id);
+        RankingId rankingId = (RankingId) o;
+        return id.equals(rankingId.id);
     }
 
     @Override
@@ -28,7 +28,7 @@ public class RankId {
 
     @Override
     public String toString() {
-        return "RankId{" +
+        return "RankingId{" +
                 "id='" + id + '\'' +
                 '}';
     }

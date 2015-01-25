@@ -18,7 +18,7 @@
         <module>ieTanks-sandbox</module>
         <module>ieTanks-utils</module>
         <module>ieTanks-league</module>
-        <module>ieTanks-rank</module>
+        <module>ieTanks-ranking</module>
     </modules>
 
     <properties>

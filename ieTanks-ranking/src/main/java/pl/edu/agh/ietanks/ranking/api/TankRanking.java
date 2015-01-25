@@ -1,15 +1,11 @@
-package pl.edu.agh.ietanks.rank.api;
+package pl.edu.agh.ietanks.ranking.api;
 
-public class TankRank {
+public class TankRanking {
 
     private String tankId;
     private int points;
 
-    public TankRank(String tankId) {
-        this(tankId, 0);
-    }
-
-    public TankRank(String tankId, int points) {
+    public TankRanking(String tankId, int points) {
         this.tankId = tankId;
         this.points = points;
     }

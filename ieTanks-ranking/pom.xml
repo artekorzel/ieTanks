@@ -10,7 +10,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>ieTanks-rank</artifactId>
+    <artifactId>ieTanks-ranking</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <dependencies>
@@ -26,5 +26,5 @@
         </dependency>
     </dependencies>
 
-    
+
 </project>
