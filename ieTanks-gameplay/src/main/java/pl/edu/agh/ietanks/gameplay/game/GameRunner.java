@@ -3,11 +3,11 @@ package pl.edu.agh.ietanks.gameplay.game;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import pl.edu.agh.ietanks.boards.model.Board;
+import pl.edu.agh.ietanks.bot.api.BotAlgorithm;
 import pl.edu.agh.ietanks.engine.api.*;
 import pl.edu.agh.ietanks.engine.api.events.Event;
 import pl.edu.agh.ietanks.engine.api.events.RoundResults;
 import pl.edu.agh.ietanks.gameplay.bot.BotExecutor;
-import pl.edu.agh.ietanks.gameplay.game.api.BotAlgorithm;
 import pl.edu.agh.ietanks.gameplay.game.api.Game;
 import pl.edu.agh.ietanks.gameplay.game.api.GameHistory;
 import pl.edu.agh.ietanks.gameplay.game.api.GameId;
@@ -24,11 +24,11 @@ class GameRunner implements Runnable, Game {
     private final EngineFactory gameEngineFactory;
     private final GameHistory historyStorage;
     private final List<Event> gameEvents;
-    private GameLogger LOGGER = new StandardOutputGameLogger();
-    private Engine gameEngine;
     private final List<List<Event>> gameRoundsEvents;
     private final Board gameBoard;
     private final Map<String, Position> initialGamersPositions;
+    private GameLogger LOGGER = new StandardOutputGameLogger();
+    private Engine gameEngine;
 
     public GameRunner(GameHistory historyStorage,
                       EngineFactory gameEngineFactory,

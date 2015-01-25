@@ -2,15 +2,19 @@ package pl.edu.agh.ietanks.gameplay.game;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.edu.agh.ietanks.boards.api.BoardsReader;
 import pl.edu.agh.ietanks.boards.model.Board;
+import pl.edu.agh.ietanks.bot.api.BotAlgorithm;
+import pl.edu.agh.ietanks.bot.api.BotId;
+import pl.edu.agh.ietanks.bot.api.BotService;
 import pl.edu.agh.ietanks.engine.util.LogExceptionRunnable;
-import pl.edu.agh.ietanks.gameplay.game.api.BotAlgorithm;
 import pl.edu.agh.ietanks.gameplay.game.api.GameId;
 import pl.edu.agh.ietanks.gameplay.game.api.GamePlay;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
 @Service
 public class SimpleGamePlay implements GamePlay {
@@ -20,6 +24,13 @@ public class SimpleGamePlay implements GamePlay {
 
     @Autowired
     private GameRunnerFactory gameRunnerFactory;
+
+    @Autowired
+    private BoardsReader boardsReader;
+
+    @Autowired
+    /*@Qualifier("httpBotService")*/
+    private BotService botService;
 
     public SimpleGamePlay() {
         executionService = Executors.newFixedThreadPool(THREADS_IN_POOL);
@@ -32,10 +43,22 @@ public class SimpleGamePlay implements GamePlay {
         });
     }
 
-    @Override
-    public GameId startGame(Board gameBoard, List<BotAlgorithm> bots) {
+    //@Override
+    private GameId startGame(Board gameBoard, List<BotAlgorithm> bots, Consumer<GameId> onGameFinished) {
         final GameRunner gameRunner = gameRunnerFactory.create(gameBoard, bots);
-        executionService.execute(new LogExceptionRunnable(gameRunner));
+        executionService.execute(
+                new CallbackRunnable(new LogExceptionRunnable(gameRunner),
+                        () -> onGameFinished.accept(gameRunner.getId())
+                ));
+
         return gameRunner.getId();
+    }
+
+    @Override
+    public GameId startNewGameplay(int boardId, List<BotId> botIds, Consumer<GameId> onGameFinished) {
+        Board board = boardsReader.getBoard(boardId);
+        List<BotAlgorithm> bots = botService.fetch(botIds);
+
+        return startGame(board, bots, onGameFinished);
     }
 }

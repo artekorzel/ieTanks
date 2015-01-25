@@ -10,6 +10,7 @@ import pl.edu.agh.ietanks.gameplay.game.api.Game;
 import pl.edu.agh.ietanks.gameplay.game.api.GameHistory;
 import pl.edu.agh.ietanks.gameplay.game.api.GameId;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,12 +27,13 @@ public class GameHistoryService {
     @Autowired
     private GameHistory gameHistory;
 
-    @RequestMapping("/api/game")
+    @RequestMapping("/game")
     public List<GameId> getGameIds() {
+
         return gameHistory.getFinishedGamesIds();
     }
 
-    @RequestMapping("/api/game/{gameId}")
+    @RequestMapping("/game/{gameId}")
     public GamePojo getGame(@ModelAttribute("gameId") GameId gameId) {
         Optional<Game> storedGame = gameHistory.getGame(gameId);
         if(!storedGame.isPresent()) throw new GameNotFoundException(gameId);
