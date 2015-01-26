@@ -57,11 +57,16 @@ ieTanksVisualization.controller('LeagueConfiguration', ['$scope', '$interval', '
         }
 
         function startDateTimeAsISOString() {
+            var date = getStartDateTimeAsJavaScriptDate(),
+                isoString = date.toISOString();
+            return isoString;
+        }
+
+        function getStartDateTimeAsJavaScriptDate() {
             var date = $scope.selectedDate ? new Date($scope.selectedDate) : new Date();
             date.setHours($scope.selectedHour);
             date.setMinutes($scope.selectedMinutes);
-            var isoString = date.toISOString();
-            return isoString;
+            return date;
         }
 
         function loadBoardOptions() {
@@ -72,9 +77,13 @@ ieTanksVisualization.controller('LeagueConfiguration', ['$scope', '$interval', '
             });
         }
 
-        $(function () {
-            $('#startDate').datepicker();
-        });
+        function initializeDatePicker() {
+            $(function () {
+                $('#startDate').datepicker();
+            });
+        }
+
         loadBoardOptions();
+        initializeDatePicker();
     }
 ]);
