@@ -7,27 +7,27 @@
                     <div class="col-xs-3">
                         <select id="selectedNumberOfGames"
                                 class="form-control"
-                                ng-model="selectedNumberOfGames"
-                                ng-options="key as numberOfGames for (key, numberOfGames) in numberOfGamesOptions"
-                        ></select>
+                                ng-model="selectedNumberOfGames">
+                            <option ng-repeat="numberOfGames in numberOfGamesOptions" value="{{$index+1}}">{{numberOfGames}}</option>
+                        </select>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="selectedIntervalCount" class="control-label col-xs-4">Match every</label>
+                    <label for="selectedIntervalCount" class="control-label col-xs-4">Match frequency</label>
                     <div class="col-xs-3">
                         <select id="selectedIntervalCount"
                                 class="form-control"
-                                ng-model="selectedIntervalCount"
-                                ng-options="key as intervalCount for (key, intervalCount) in intervalCountOptions"
-                        ></select>
+                                ng-model="selectedIntervalCount">
+                            <option ng-repeat="intervalCount in intervalCountOptions" value="{{$index}}">{{intervalCount}}</option>
+                        </select>
                     </div>
                     <div class="col-xs-4">
                         <select id="selectedIntervalPeriod"
                                 class="form-control"
-                                ng-model="selectedIntervalPeriod"
-                                ng-options="key as intervalPeriod for (key, intervalPeriod) in intervalPeriodOptions"
-                        ></select>
+                                ng-model="selectedIntervalPeriod">
+                            <option ng-repeat="intervalPeriod in intervalPeriodOptions" value="{{intervalPeriod}}">{{intervalPeriod}}</option>
+                        </select>
                     </div>
                 </div>
 
@@ -48,15 +48,15 @@
                     <div class="col-xs-3">
                         <select id="selectedHours"
                                 class="form-control"
-                                ng-model="selectedHour"
-                                ng-options="key as hour for (key, hour) in hoursOptions"
-                        ></select>
+                                ng-model="selectedHour">
+                            <option ng-repeat="hour in hoursOptions" value="{{$index}}">{{hour}}</option>
+                        </select>
                     </div>
                     <div class="col-xs-3">
                         <select id="selectedMinutes"
                                 class="form-control"
-                                ng-model="selectedMinutes"
-                                ng-options="key as minute for (key, minute) in minutesOptions"
+                                ng-model="selectedMinutes">
+                            <option ng-repeat="minute in minutesOptions" value="{{$index}}">{{minute}}</option>
                         ></select>
                     </div>
                 </div>

@@ -7,11 +7,11 @@ ieTanksVisualization.controller('LeagueConfiguration', ['$scope', '$interval', '
             range1to20 = _.range(1, 1 + 20),
             range0to59 = _.range(0, 1 + 59);
 
-        $scope.numberOfGamesOptions = _.object(range1to20, range1to20);
-        $scope.intervalCountOptions = _.object(range0to59, range0to59);
-        $scope.intervalPeriodOptions = _.object(intervalPeriodOptions, intervalPeriodOptions);
-        $scope.hoursOptions = _.object(range0to23, range0to23);
-        $scope.minutesOptions = _.object(range0to59, range0to59);
+        $scope.numberOfGamesOptions = range1to20;
+        $scope.intervalCountOptions = range0to59;
+        $scope.intervalPeriodOptions = intervalPeriodOptions;
+        $scope.hoursOptions = range0to23;
+        $scope.minutesOptions = range0to59;
         $scope.boardOptions = []; //[{id: 'board1', max: 5}, {id: 'board2', max: 3}, {id: 'board3', max: 6}, {id: 'board4', max: 4}];
 
         $scope.selectedNumberOfGames = $scope.numberOfGamesOptions[0];
