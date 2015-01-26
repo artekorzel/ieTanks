@@ -71,18 +71,6 @@ ieTanksApp.controller('AuthCtrl', function ($scope, $auth) {
     };
 });
 
-ieTanksApp.filter('sortKeyIds', function() {
-    return function(input) {
-        var keys = angular.forEach(input, function(value, key) {
-            return parseInt(key);
-        });
-        keys.sort(function(a, b) {
-            return a - b;
-        });
-        return keys;
-    }
-});
-
 ieTanksApp.run(function ($rootScope, $location) {
     $rootScope.isActive = function (viewLocation) {
         return $location.path().indexOf(viewLocation) === 0;
