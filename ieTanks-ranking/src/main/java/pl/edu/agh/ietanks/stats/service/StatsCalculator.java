@@ -11,23 +11,55 @@ import java.util.*;
 @Service
 public class StatsCalculator{
 
-    public Map<String, Integer> calculateStatForGame(Game game) {
-        Map<String, Integer> stats = new HashMap<>();
+    public Map<String, Object> calculateStatForGame(Game game) {
+        Map<String, Integer> gameStats = new HashMap<>();
         List<Event> gameEvents = game.getGameEvents();
-        int bulletsShot = 0;
+        List<String> bulletsShot = new ArrayList<>();
+        List<String> tankMoves = new ArrayList<>();
         int roundsPlayed = game.getGameEventsByRound().size();
-        int tankMoves = 0;
         for (Event event : gameEvents) {
                 if (event instanceof MissileCreated) {
-                    bulletsShot++;
+                    String tankId = ((MissileCreated) event).tankId();
+                    bulletsShot.add(tankId);
                 }
                 else if(event instanceof TankMoved){
-                    tankMoves++;
+                    String tankId = ((TankMoved) event).tankId();
+                    tankMoves.add(tankId);
                 }
         }
-        stats.put("bulletsShot",bulletsShot);
-        stats.put("roundsPlayed",roundsPlayed);
-        stats.put("tankMoves",tankMoves);
-        return stats;
+        gameStats.put("bulletsShot", bulletsShot.size());
+        gameStats.put("roundsPlayed", roundsPlayed);
+        gameStats.put("tankMoves", tankMoves.size());
+
+        HashMap<String, Integer> bulletsPerTank = new HashMap<>();
+        for(String tankId : bulletsShot) {
+            if(bulletsPerTank.containsKey(tankId)) {
+                bulletsPerTank.put(tankId, bulletsPerTank.get(tankId)+1);
+            }
+            else{ bulletsPerTank.put(tankId, 1); }
+        }
+        HashMap<String, Integer> movesPerTank = new HashMap<>();
+        for(String tankId : tankMoves) {
+            if(movesPerTank.containsKey(tankId)) {
+                movesPerTank.put(tankId, movesPerTank.get(tankId)+1);
+            }
+            else{ movesPerTank.put(tankId, 1); }
+        }
+
+        ArrayList<Map> tanksStats = new ArrayList<>();
+
+        for (Map.Entry<String, Integer> entry : bulletsPerTank.entrySet()){
+            HashMap<String, String> tank = new HashMap<>();
+            tank.put("tankId", entry.getKey());
+            tank.put("bulletsShot", entry.getValue().toString());
+            tank.put("tankMoves", movesPerTank.get(entry.getKey()).toString());
+            tanksStats.add(tank);
+        }
+
+        Map<String, Object> statistics = new HashMap<>();
+        statistics.put("gameStats", gameStats);
+        statistics.put("tanksStats", tanksStats);
+
+        return statistics;
     }
 }

@@ -10,7 +10,6 @@ import pl.edu.agh.ietanks.gameplay.game.api.GameId;
 import pl.edu.agh.ietanks.ranking.exceptions.GameNotFoundException;
 import pl.edu.agh.ietanks.stats.service.StatsCalculator;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -28,11 +27,7 @@ public class StatisticsController {
         if (!gameOptional.isPresent()) {
             throw new GameNotFoundException(gameId);
         }
-
         StatsCalculator statsCalculator = new StatsCalculator();
-        Map<String, Map> statistics = new HashMap<>();
-        statistics.put("gameStats", statsCalculator.calculateStatForGame(gameOptional.get()));
-
-        return statistics;
+        return statsCalculator.calculateStatForGame(gameOptional.get());
     }
 }
