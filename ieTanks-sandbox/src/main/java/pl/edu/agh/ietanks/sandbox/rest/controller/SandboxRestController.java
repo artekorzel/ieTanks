@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.edu.agh.ietanks.gameplay.game.api.BotId;
 import pl.edu.agh.ietanks.gameplay.game.api.GameId;
 import pl.edu.agh.ietanks.sandbox.rest.pojo.BoardPojo;
+import pl.edu.agh.ietanks.sandbox.rest.pojo.BotForm;
 import pl.edu.agh.ietanks.sandbox.rest.pojo.BotPojo;
 import pl.edu.agh.ietanks.sandbox.rest.pojo.StartGameForm;
 import pl.edu.agh.ietanks.sandbox.simple.api.Sandbox;
@@ -21,6 +22,13 @@ public class SandboxRestController {
     @RequestMapping(value = "/api/bot",method = RequestMethod.GET)
     List<BotPojo> getBots() {
         return sandboxService.getAvailableBots().stream().map(BotPojo::new).collect(Collectors.toList());
+    }
+
+    @RequestMapping(value = "bot",method = RequestMethod.POST)
+    void saveBot(@RequestBody BotForm botREST) {
+        System.out.println(botREST.getBotID());
+        System.out.println(botREST.getUserID());
+        System.out.println(botREST.getCode());
     }
 
     @RequestMapping("/api/board")
