@@ -9,8 +9,8 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
         $scope.games = [];
         $scope.currentStep = 0;
         $scope.gameLength = 0;
-        $scope.gameStats = undefined; //{"tankMoves":11,"bulletsShot":2,"roundsPlayed":6};
-        $scope.tankStats = []; //[{"tankMoves":"6","bulletsShot":"1","tankId":"bot1"},{"tankMoves":"5","bulletsShot":"1","tankId":"bot2"}];
+        $scope.gameStats = undefined;
+        $scope.tankStats = [];
 
         $scope.changeStep = function(amount) {
             if($scope.currentStep+amount>=$scope.gameLength) {
