@@ -4,10 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.edu.agh.ietanks.ranking.api.Ranking;
 import pl.edu.agh.ietanks.ranking.api.RankingId;
-import pl.edu.agh.ietanks.ranking.api.RankingService;
 import pl.edu.agh.ietanks.ranking.exceptions.RankingNotFoundException;
+import pl.edu.agh.ietanks.ranking.internal.api.Ranking;
+import pl.edu.agh.ietanks.ranking.internal.api.RankingService;
 
 import java.util.Optional;
 

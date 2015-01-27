@@ -1,10 +1,10 @@
 package pl.edu.agh.ietanks.ranking.service;
 
 import org.springframework.stereotype.Repository;
-import pl.edu.agh.ietanks.ranking.api.Ranking;
 import pl.edu.agh.ietanks.ranking.api.RankingId;
-import pl.edu.agh.ietanks.ranking.api.RankingStorage;
 import pl.edu.agh.ietanks.ranking.exceptions.RankingNotFoundException;
+import pl.edu.agh.ietanks.ranking.internal.api.Ranking;
+import pl.edu.agh.ietanks.ranking.internal.api.RankingStorage;
 
 import java.util.Map;
 import java.util.Optional;
@@ -19,7 +19,7 @@ public class InMemoryRankingStorage implements RankingStorage {
 
     @Override
     public RankingId createRanking() {
-        RankingId rankingId = new RankingId("" + rankIdBase.incrementAndGet());
+        RankingId rankingId = new RankingId(Long.toString(rankIdBase.incrementAndGet()));
         Ranking ranking = new Ranking();
         ranking.setRankingId(rankingId);
         gameRanksCache.put(rankingId, ranking);
@@ -31,15 +31,13 @@ public class InMemoryRankingStorage implements RankingStorage {
         RankingId rankingId = ranking.getRankingId();
         if (gameRanksCache.containsKey(rankingId)) {
             gameRanksCache.put(rankingId, ranking);
+            return;
         }
         throw new RankingNotFoundException(rankingId);
     }
 
     @Override
     public Optional<Ranking> findRankingById(RankingId rankingId) {
-        if (gameRanksCache.containsKey(rankingId)) {
-            return Optional.of(gameRanksCache.get(rankingId));
-        }
-        return Optional.empty();
+        return Optional.ofNullable(gameRanksCache.get(rankingId));
     }
 }

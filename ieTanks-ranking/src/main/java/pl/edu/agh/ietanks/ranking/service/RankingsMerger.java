@@ -1,8 +1,8 @@
 package pl.edu.agh.ietanks.ranking.service;
 
 import org.springframework.stereotype.Service;
-import pl.edu.agh.ietanks.ranking.api.Ranking;
 import pl.edu.agh.ietanks.ranking.api.TankRanking;
+import pl.edu.agh.ietanks.ranking.internal.api.Ranking;
 
 import java.util.*;
 import java.util.function.BinaryOperator;
@@ -12,6 +12,13 @@ public class RankingsMerger implements BinaryOperator<Ranking> {
 
     @Override
     public Ranking apply(Ranking ranking1, Ranking ranking2) {
+        Map<String, TankRanking> tankRankingsMap = mergeRankingsIntoMap(ranking1, ranking2);
+        List<TankRanking> tankRankingList = sortTankRankingsDescending(tankRankingsMap.values());
+        Map<Integer, TankRanking> rankingsMap = buildTankRankingsMapWithPositions(tankRankingList);
+        return new Ranking(rankingsMap);
+    }
+
+    private Map<String, TankRanking> mergeRankingsIntoMap(Ranking ranking1, Ranking ranking2) {
         Map<String, TankRanking> tankRankingsMap = new HashMap<>();
         for (TankRanking tankRanking : ranking1.getTankRankings().values()) {
             String tankId = tankRanking.getTankId();
@@ -26,14 +33,7 @@ public class RankingsMerger implements BinaryOperator<Ranking> {
                 tankRankingsMap.put(tankId, new TankRanking(tankId, tankRanking.getPoints()));
             }
         }
-
-        List<TankRanking> tankRankingList = sortTankRankingsDescending(tankRankingsMap.values());
-        Map<Integer, TankRanking> rankingsMap = new HashMap<>();
-        int tankPosition = 1;
-        for (TankRanking tankRanking : tankRankingList) {
-            rankingsMap.put(tankPosition++, tankRanking);
-        }
-        return new Ranking(rankingsMap);
+        return tankRankingsMap;
     }
 
     private List<TankRanking> sortTankRankingsDescending(Collection<TankRanking> values) {
@@ -49,5 +49,14 @@ public class RankingsMerger implements BinaryOperator<Ranking> {
             return 0;
         });
         return tankRankingList;
+    }
+
+    private Map<Integer, TankRanking> buildTankRankingsMapWithPositions(List<TankRanking> tankRankingList) {
+        Map<Integer, TankRanking> rankingsMap = new HashMap<>();
+        int tankPosition = 1;
+        for (TankRanking tankRanking : tankRankingList) {
+            rankingsMap.put(tankPosition++, tankRanking);
+        }
+        return rankingsMap;
     }
 }

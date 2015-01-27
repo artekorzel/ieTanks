@@ -5,9 +5,13 @@ import org.springframework.stereotype.Service;
 import pl.edu.agh.ietanks.gameplay.game.api.Game;
 import pl.edu.agh.ietanks.gameplay.game.api.GameHistory;
 import pl.edu.agh.ietanks.gameplay.game.api.GameId;
-import pl.edu.agh.ietanks.ranking.api.*;
+import pl.edu.agh.ietanks.ranking.api.RankingId;
 import pl.edu.agh.ietanks.ranking.exceptions.GameNotFoundException;
 import pl.edu.agh.ietanks.ranking.exceptions.RankingNotFoundException;
+import pl.edu.agh.ietanks.ranking.internal.api.Ranking;
+import pl.edu.agh.ietanks.ranking.internal.api.RankingCalculator;
+import pl.edu.agh.ietanks.ranking.internal.api.RankingService;
+import pl.edu.agh.ietanks.ranking.internal.api.RankingStorage;
 
 import java.util.Optional;
 

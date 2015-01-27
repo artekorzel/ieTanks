@@ -1,4 +1,7 @@
-package pl.edu.agh.ietanks.ranking.api;
+package pl.edu.agh.ietanks.ranking.internal.api;
+
+import pl.edu.agh.ietanks.ranking.api.RankingId;
+import pl.edu.agh.ietanks.ranking.api.TankRanking;
 
 import java.util.Collections;
 import java.util.HashMap;
