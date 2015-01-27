@@ -56,7 +56,7 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
             }
         });
 
-        $scope.games = REST.game.query(function() {}, function() {
+        $scope.games = REST.games.query(function() {}, function() {
             console.log('Failed to load list of games.');
             alertify.error('Failed to load list of games.');
         });
