@@ -12,9 +12,9 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import pl.edu.agh.ietanks.bot.api.BotId;
 import pl.edu.agh.ietanks.gameplay.game.api.GameId;
 import pl.edu.agh.ietanks.gameplay.game.api.GamePlay;
-import pl.edu.agh.ietanks.league.external.RankingService;
 import pl.edu.agh.ietanks.league.external.UserService;
 import pl.edu.agh.ietanks.league.infrastructure.SchedulerConfiguration;
+import pl.edu.agh.ietanks.ranking.api.RankingService;
 
 import java.time.Duration;
 import java.time.ZonedDateTime;
@@ -83,7 +83,7 @@ public class LeagueServiceTest {
 
         @Bean
         public RankingService createRankingService() {
-            return new RankingService();
+            return new FakeRankingService();
         }
 
         @Bean
