@@ -54,7 +54,7 @@ ieTanksVisualization.controller('LeagueConfiguration', ['$scope', '$interval', '
         }
 
         function loadBoardOptions() {
-            $scope.boardOptions = REST.maps.get(function () {
+            $scope.boardOptions = REST.maps.query(function () {
                 console.log('List of boards loaded');
             }, function (e) {
                 console.log('Unable to load list of boards: ' + e.statusText);
