@@ -23,9 +23,7 @@ public class BotRestController {
 
     @RequestMapping(value = "bot",method = RequestMethod.POST)
     void saveBot(@RequestBody BotForm botREST) {
-        System.out.println(botREST.getBotID());
-        System.out.println(botREST.getUserID());
-        System.out.println(botREST.getCode());
+        botService.saveBot(botREST);
     }
 
 }

@@ -4,6 +4,6 @@ angular.module('botsForm', [])
 
         $scope.update = function(form) {
             REST.bot.save(form)
-
+            window.location.href = '/'
         };
     }]);
