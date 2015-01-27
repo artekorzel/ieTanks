@@ -2,13 +2,15 @@ package pl.edu.agh.ietanks.bot;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class BotIdJson {
 
     private final String id;
 
     @JsonCreator
-    public BotIdJson(@JsonProperty("id") String id) {
+    public BotIdJson(@JsonProperty("bot_id") String id) {
         this.id = id;
     }
 

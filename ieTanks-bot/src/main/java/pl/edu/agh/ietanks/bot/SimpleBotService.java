@@ -25,6 +25,11 @@ public class SimpleBotService implements BotService {
     }
 
     @Override
+    public void saveBot(BotForm botForm) {
+
+    }
+
+    @Override
     public BotAlgorithm fetch(BotId botId) {
         return algorithms.stream().filter(bot -> bot.id().equals(botId)).findFirst().orElse(null);
     }

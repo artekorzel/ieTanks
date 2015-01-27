@@ -5,6 +5,7 @@
 var ieTanksApp = angular.module('ieTanksApp', [
     'ieTanksVisualization',
     'ieTanksServices',
+    'botsForm',
     'ngRoute',
     'ngResource',
     'satellizer'
@@ -21,6 +22,10 @@ ieTanksApp.config(['$routeProvider',
                 url: '/login',
                 templateUrl: 'html/login.html',
                 controller: 'AuthCtrl'
+            }).
+            when('/bots', {
+                templateUrl: 'html/bots.html',
+                controller: 'BotsController'
             }).
             otherwise({
                 redirectTo: '/'
