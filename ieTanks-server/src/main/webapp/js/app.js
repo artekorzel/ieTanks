@@ -17,10 +17,6 @@ ieTanksApp.config(['$routeProvider',
                 templateUrl: 'html/game.html',
                 controller: 'GameCtrl'
             }).
-            when('/games', {
-                templateUrl: 'html/history.html',
-                controller: 'GameHistory'
-            }).
             when('/login', {
                 url: '/login',
                 templateUrl: 'html/login.html',

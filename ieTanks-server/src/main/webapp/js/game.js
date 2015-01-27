@@ -155,15 +155,6 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
 
     }
 ])
-    .controller('GameHistory', ['$scope', '$interval', 'REST',
-        function ($scope, $interval, REST) {
-            var gameHistory = REST.games.query(function () {
-                $scope.gameHistory = gameHistory;
-            }, function () {
-                console.log('Failed to retrieve finished games list.');
-            });
-        }
-    ])
     .directive('tankGame', function () {
         return {
             scope: {
