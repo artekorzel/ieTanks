@@ -1,0 +1,11 @@
+language: java
+
+jdk:
+  - oraclejdk8
+
+before_install:
+  - npm install -g bower
+  - sudo ln -s `which bower` /usr/bin/bower
+
+after_success:
+  - mvn clean test jacoco:report coveralls:report
