@@ -1,7 +1,7 @@
-var ieTanksVisualization = angular.module('ieTanksVisualization', []);
+var ieTanksVisualization = angular.module('ieTanksVisualization', ['ngTable']);
 
-ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParams', 'REST',
-    function ($scope, $interval, $routeParams, REST) {
+ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParams', 'REST', 'ngTableParams',
+    function ($scope, $interval, $routeParams, REST, ngTableParams) {
         var events = [];
         var intervalStepping = undefined;
         $scope.gameBorder = 600;
@@ -9,6 +9,8 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
         $scope.games = [];
         $scope.currentStep = 0;
         $scope.gameLength = 0;
+        $scope.gameStats = undefined; //{"tankMoves":11,"bulletsShot":2,"roundsPlayed":6};
+        $scope.tankStats = []; //[{"tankMoves":"6","bulletsShot":"1","tankId":"bot1"},{"tankMoves":"5","bulletsShot":"1","tankId":"bot2"}];
 
         $scope.changeStep = function(amount) {
             if($scope.currentStep+amount>=$scope.gameLength) {
@@ -47,6 +49,13 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
                 }, function () {
                     console.log('Failed to load game events.');
                 });
+                var allGameStat = REST.stat.get({gameId: $scope.selectedGame.gameId }, function () {
+                    $scope.gameStats = allGameStat['gameStats'];
+                    $scope.tankStats = allGameStat['tanksStats'];
+
+                    $scope.tanksStatsTableParams.reload();
+                });
+
             }
         });
 
@@ -61,6 +70,15 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
             alertify.error('Failed to load list of games.');
         });
 
+        $scope.tanksStatsTableParams = new ngTableParams({
+            page: 1,            // show first page
+            count: 10           // count per page
+        }, {
+            total: function () { $scope.tankStats.length }, // length of data
+            getData: function($defer, params) {
+                $defer.resolve($scope.tankStats.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+            }
+        });
 
         // TODO: REMOVE/COMMENT EVERYTHING UNDER WHEN REST SERVICES ARE READY
 
