@@ -1,8 +1,8 @@
 [
     {
-        "id": "first-bot"
+        "bot_id": "first-bot"
     },
     {
-        "id": "second-bot"
+        "bot_id": "second-bot"
     }
 ]
