@@ -32,7 +32,7 @@ ieTanksVisualization.controller('LeagueConfiguration', ['$scope', '$interval', '
 
         $scope.save = function () {
             var payload = getSaveLeagueConfigurationPayload();
-            REST.leagues.query(payload, function () {
+            REST.leagues.save(payload, function () {
                     console.log('League configuration saved');
                 },
                 function (e) {
@@ -54,7 +54,7 @@ ieTanksVisualization.controller('LeagueConfiguration', ['$scope', '$interval', '
         }
 
         function loadBoardOptions() {
-            $scope.boardOptions = REST.maps.get(function () {
+            $scope.boardOptions = REST.maps.query(function () {
                 console.log('List of boards loaded');
             }, function (e) {
                 console.log('Unable to load list of boards: ' + e.statusText);
