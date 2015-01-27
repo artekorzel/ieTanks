@@ -10,15 +10,12 @@ ieTanksVisualization.controller('LeagueConfiguration', ['$scope', '$interval', '
         $scope.numberOfGamesOptions = range1to20;
         $scope.intervalCountOptions = range0to59;
         $scope.intervalPeriodOptions = intervalPeriodOptions;
-        $scope.hoursOptions = range0to23;
-        $scope.minutesOptions = range0to59;
         $scope.boardOptions = []; //[{id: 'board1', max: 5}, {id: 'board2', max: 3}, {id: 'board3', max: 6}, {id: 'board4', max: 4}];
 
         $scope.selectedNumberOfGames = $scope.numberOfGamesOptions[0];
         $scope.selectedIntervalCount = $scope.intervalCountOptions[0];
         $scope.selectedIntervalPeriod = $scope.intervalPeriodOptions[0];
-        $scope.selectedHour = $scope.hoursOptions[0];
-        $scope.selectedMinutes = $scope.minutesOptions[0];
+        $scope.selectedStartDateTime = moment().format();
         $scope.selectedBoard = null;
         $scope.numberOfPlayers = 0;
         $scope.selectedPlayers = [];
@@ -50,23 +47,10 @@ ieTanksVisualization.controller('LeagueConfiguration', ['$scope', '$interval', '
                     value: parseInt($scope.selectedIntervalCount),      //int
                     unit: $scope.selectedIntervalPeriod                 //string
                 },
-                first_game_datetime: startDateTimeAsISOString(),        //string
+                first_game_datetime: $scope.selectedStartDateTime,      //string
                 board_id: $scope.selectedBoard,                         //string
                 players: _.compact($scope.selectedPlayers)              //string[]
             };
-        }
-
-        function startDateTimeAsISOString() {
-            var date = getStartDateTimeAsJavaScriptDate(),
-                isoString = date.toISOString();
-            return isoString;
-        }
-
-        function getStartDateTimeAsJavaScriptDate() {
-            var date = $scope.selectedDate ? new Date($scope.selectedDate) : new Date();
-            date.setHours($scope.selectedHour);
-            date.setMinutes($scope.selectedMinutes);
-            return date;
         }
 
         function loadBoardOptions() {
@@ -77,13 +61,20 @@ ieTanksVisualization.controller('LeagueConfiguration', ['$scope', '$interval', '
             });
         }
 
-        function initializeDatePicker() {
-            $(function () {
-                $('#startDate').datepicker();
-            });
-        }
-
         loadBoardOptions();
-        initializeDatePicker();
     }
-]);
+])
+.directive('eonasdanDatetimePicker', function () {
+          return {
+              restrict: 'A',
+              require: 'ngModel',
+              link: function (scope, element, attributes, ctrl) {
+                  $(element).datetimepicker({ locale: 'en-gb' });
+                  $(element).on('dp.change', function (event) {
+                      scope.$apply(function() {
+                          ctrl.$setViewValue(event.date.format());
+                      });
+                  });
+              }
+          };
+      });
