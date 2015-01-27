@@ -3,15 +3,19 @@ package pl.edu.agh.ietanks.stats.api;
 public class TankStatistics {
 
     private String tankId;
-    private int tanksShot;
     private int bulletsShot;
+    private int tankMoves;
     private int roundsPlayed;
 
-    public TankStatistics(String tankId, int tanksShot, int bulletsShot, int roundsPlayed) {
+    public TankStatistics(String tankId, int bulletsShot, int tankMoves, int roundsPlayed) {
         this.tankId = tankId;
         this.bulletsShot = bulletsShot;
         this.roundsPlayed = roundsPlayed;
-        this.tanksShot = tanksShot;
+        this.tankMoves = tankMoves;
+    }
+
+    public void incrementBulletsShot(){
+        bulletsShot++;
     }
 
     public String getTankId() {
@@ -19,7 +23,7 @@ public class TankStatistics {
     }
 
     public int getTanksShot() {
-        return tanksShot;
+        return tankMoves;
     }
 
     public int getBulletsShot() {
