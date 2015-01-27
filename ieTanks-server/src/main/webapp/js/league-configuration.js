@@ -2,7 +2,7 @@ var ieTanksVisualization = angular.module('ieTanksVisualization');
 
 ieTanksVisualization.controller('LeagueConfiguration', ['$scope', '$interval', 'REST',
     function ($scope, $interval, REST) {
-        var intervalPeriodOptions = ['seconds', 'minutes', 'hours', 'days', 'weeks', 'months'],
+        var intervalPeriodOptions = ['seconds', 'minutes', 'hours', 'days'],
             range0to23 = _.range(0, 1 + 23),
             range1to20 = _.range(1, 1 + 20),
             range0to59 = _.range(0, 1 + 59);
