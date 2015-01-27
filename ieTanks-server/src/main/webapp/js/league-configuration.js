@@ -25,7 +25,7 @@ ieTanksVisualization.controller('LeagueConfiguration', ['$scope', '$interval', '
                 selectedBoard = _.find($scope.boardOptions, function (boardOption) {
                     return boardOption.id === idToSearch;
                 }),
-                numberOfPlayers = selectedBoard ? selectedBoard.max : 0;
+                numberOfPlayers = selectedBoard ? selectedBoard.max : 10;
             $scope.selectedPlayers = Array(numberOfPlayers);
             $scope.numberOfSelectedPlayers = _.range(0, numberOfPlayers);
         });
