@@ -3,7 +3,6 @@ var ieTanksServices = angular.module('ieTanksServices', []);
 ieTanksServices.factory('REST', ['$resource',
     function ($resource) {
         return {
-            games:  $resource('/api/game'),         // GET
             game:   $resource('/api/game/:gameId'), // GET|POST
             bot:    $resource('/api/bot'),          // GET|POST
             maps:   $resource('/api/board'),       // GET
