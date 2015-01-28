@@ -9,7 +9,7 @@ ieTanksServices.factory('REST', ['$resource',
             bot:    $resource('/api/bot'),              // GET|POST
             leagues:$resource('/api/league'),           // GET|POST
             league: $resource('/api/league/:leagueId'), // GET
-            maps:   $resource('/api/api/board'),            // GET
+            maps:   $resource('/api/board'),            // GET
             auth:   $resource('/api/login')             // POST
             // add more calls to external components
         };
