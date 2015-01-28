@@ -26,8 +26,9 @@ Installation
 ###### Fresh
 1. Download/clone the repository and change working directory to the newly created project dir.
 2. Run: `./install_ubuntu.sh firstrun`, script will resolve all dependencies mentioned above.
+
 ###### Rebuilding
-1. Run inside project root: `./install_ubuntu.sh`
+Run inside project root: `./install_ubuntu.sh`
 
 Running
 -------
@@ -38,4 +39,4 @@ Run in terminal inside project's root dir:
 (mvn jetty:run -pl ieTanks-server &)
 (mvn exec:exec -P tornado -pl ieTanks-server &)
 ```
-When jetty server is ready, open http://localhost:8080 in your web browser.
+When jetty server is ready, open [http://localhost:8080](http://localhost:8080) in your web browser.
