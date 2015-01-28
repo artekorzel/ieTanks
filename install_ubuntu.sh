@@ -27,7 +27,7 @@ prepare() {
         pushd ieTanks-server/src/main/webapp
         bower install
         popd
-        mvn install
+        mvn clean install
 }
 
 case $(id -u) in
@@ -35,9 +35,11 @@ case $(id -u) in
                 update_system
         ;;
         *)
-                echo 'Installing required packages'
-                sudo $0
-                echo 'Compiling project dependencies'
+                if [ "$1" -eq "firstrun" ]; then
+                        echo 'Installing required packages'
+                        sudo $0
+                fi
+                echo 'Building project'
                 prepare
         ;;
 esac
