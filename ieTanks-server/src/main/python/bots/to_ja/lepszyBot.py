@@ -26,9 +26,11 @@ class SampleBot(Bot):
     def performAction(self, board):
         my_position = self.getMyPosition(board)
         attacked_fields = self.calculate_attacked_fields(board)
+        print "ATTACK", attacked_fields
         possible_move_directions = self.possible_move_directions(my_position, attacked_fields, board)
         can_i_move = len(possible_move_directions) > 0
         possible_shot_directions = self.possible_shot_directions(my_position, board)
+        print "SHOOT", possible_shot_directions
         should_i_attack = len(possible_shot_directions) > 0
 
         if self.should_i_run(my_position, attacked_fields):
@@ -47,16 +49,16 @@ class SampleBot(Bot):
     def calculate_attacked_fields(self, board):
         attacked_fields = []
         missiles = board.findMissiles()
-        for missile in missiles:
-            missile_future_position = missile.position().moveMissile(missile.direction(), missile.speed())
-            if board.isWithin(missile_future_position):
-                attacked_fields.append(missile_future_position)
+        # for missile in missiles:
+        #     missile_future_position = missile.position().moveMissile(missile.direction(), missile.speed())
+        #     if board.isWithin(missile_future_position):
+        #         attacked_fields.append(missile_future_position)
         return attacked_fields
 
     def should_i_run(self, my_position, attacked_fields):
-        for attacked_field in attacked_fields:
-            if attacked_field.equals(my_position):
-                return True
+        # for attacked_field in attacked_fields:
+        #     if attacked_field.equals(my_position) and self.random.nextFloat()>0.8:
+        #         return True
         return False
 
     def possible_move_directions(self, my_position, attacked_fields, board):
@@ -89,7 +91,7 @@ class SampleBot(Bot):
         for tank_position in tank_positions:
             for direction in directions:
                 try_position = my_position.moveInShotDirection(direction, self.shot_speed)
-                if board.isWithin(try_position) and try_position.equals(tank_position):
+                if board.isWithin(try_position) and (try_position.equals(tank_position) or self.random.nextFloat()>0.5):
                     possible_directions.append(direction)
         return possible_directions
 

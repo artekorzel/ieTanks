@@ -30,7 +30,7 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
 
         $scope.$watch('selectedGame', function() {
             if($scope.selectedGame) {
-                var gameInfo = REST.game.query({gameId: $scope.selectedGame.gameId}, function () {
+                var gameInfo = REST.game.get({gameId: $scope.selectedGame.gameId}, function () {
                     events = gameInfo['events'];
                     $scope.map = gameInfo['map'];
                     $scope.gameLength = events.length;
@@ -45,7 +45,7 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
                         } else {
                             console.log('No more events to display.');
                         }
-                    }, 2000);
+                    }, 1000);
                 }, function () {
                     console.log('Failed to load game events.');
                 });
@@ -70,6 +70,97 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
             alertify.error('Failed to load list of games.');
         });
 
+        //
+        //// TODO: REMOVE/COMMENT EVERYTHING UNDER WHEN REST SERVICES ARE READY
+        //
+        //for(var i = 1; i< 100; i++) {
+        //    $scope.games.push({gameId:i});
+        //}
+        //
+        //$scope.map = {
+        //    width: 18,
+        //    height: 20,
+        //    obstacles: [{type: '', x: 4, y: 9}, {type: '', x: 10, y: 7}, {type: '', x: 11, y: 7}, {
+        //        type: '',
+        //        x: 12,
+        //        y: 7
+        //    }]
+        //};
+        //
+        //events = [{
+        //    players: [{playerId: 'blabla', action: 'move', x: '10', y: '5', dirX:1, dirY:0}, {
+        //        playerId: 'blabla2',
+        //        action: 'move',
+        //        x: '3',
+        //        y: '2', dirX:-1, dirY:0
+        //    }], missiles: []
+        //},
+        //    {
+        //        players: [{playerId: 'blabla', action: 'move', x: '6', y: '2', dirX: -1, dirY:-1}, {
+        //            playerId: 'blabla2',
+        //            action: 'move',
+        //            x: '11',
+        //            y: '2', dirX: 1, dirY:0
+        //        }], missiles: []
+        //    },
+        //    {
+        //        players: [{playerId: 'blabla', action: 'move', x: '14', y: '19', dirX:1, dirY:-1}, {
+        //            playerId: 'blabla2',
+        //            action: 'move',
+        //            x: '5',
+        //            y: '5', dirX:-1, dirY:-1
+        //        }], missiles: []
+        //    },
+        //    {
+        //        players: [{playerId: 'blabla', action: 'move', x: '0', y: '16', dirX: -1, dirY:1}, {
+        //            playerId: 'blabla2',
+        //            action: 'move',
+        //            x: '7',
+        //            y: '0', dirX: 1, dirY:1
+        //        }], missiles: []
+        //    },
+        //    {
+        //        players: [{playerId: 'blabla', action: 'move', x: '0', y: '14', dirX: -1, dirY:1}, {
+        //            playerId: 'blabla2',
+        //            action: 'shoot',
+        //            x: '7',
+        //            y: '0', dirX:0, dirY:0
+        //        }], missiles: [{playerId: 'blabla2', missileId: '1', x: '7', y: '1', dirX:0, dirY:-1}]
+        //    },
+        //    {
+        //        players: [{playerId: 'blabla', action: 'move', x: '5', y: '12', dirX:1, dirY:1}, {
+        //            playerId: 'blabla2',
+        //            action: 'move',
+        //            x: '0',
+        //            y: '10', dirX:-1, dirY:-1
+        //        }], missiles: [{playerId: 'blabla2', missileId: '1', x: '5', y: '12', dirX:-1, dirY:-1}]
+        //    },
+        //    {players: [{playerId: 'blabla2', action: 'move', x: '7', y: '12', dirX:1, dirY:-1}], missiles: []},
+        //    {players: [{playerId: 'blabla2', action: 'move', x: '0', y: '0', dirX:-1, dirY:1}], missiles: []}];
+        //
+        //var changeMap = false;
+        //$scope.gameLength = events.length;
+        //$interval(function () {
+        //    if ($scope.currentStep==0 && changeMap) {
+        //        var mapWidth = Math.floor(Math.random()*4)+18;
+        //        var mapHeight = Math.floor(Math.random()*4)+20;
+        //        $scope.map = {
+        //            width: mapWidth,
+        //            height: mapHeight,
+        //            obstacles: [{type: '', x: 4, y: 9}, {type: '', x: 10, y: 7}, {type: '', x: 11, y: 7}, {
+        //                type: '',
+        //                x: 12,
+        //                y: 7
+        //            }]
+        //        };
+        //        $scope.gameLength = events.length;
+        //        changeMap = false;
+        //    } else {
+        //        //$scope.state = events[$scope.currentStep];
+        //        $scope.currentStep = (1 + $scope.currentStep) % events.length;
+        //        changeMap = true;
+        //    }
+        //}, 1500);
         $scope.tanksStatsTableParams = new ngTableParams({
             page: 1,            // show first page
             count: 10           // count per page
@@ -79,97 +170,6 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
                 $defer.resolve($scope.tankStats.slice((params.page() - 1) * params.count(), params.page() * params.count()));
             }
         });
-
-        // TODO: REMOVE/COMMENT EVERYTHING UNDER WHEN REST SERVICES ARE READY
-
-        for(var i = 1; i< 100; i++) {
-            $scope.games.push({gameId:i});
-        }
-
-        $scope.map = {
-            width: 18,
-            height: 20,
-            obstacles: [{type: '', x: 4, y: 9}, {type: '', x: 10, y: 7}, {type: '', x: 11, y: 7}, {
-                type: '',
-                x: 12,
-                y: 7
-            }]
-        };
-
-        events = [{
-            players: [{playerId: 'blabla', action: 'move', x: '10', y: '5', dirX:1, dirY:0}, {
-                playerId: 'blabla2',
-                action: 'move',
-                x: '3',
-                y: '2', dirX:-1, dirY:0
-            }], missiles: []
-        },
-            {
-                players: [{playerId: 'blabla', action: 'move', x: '6', y: '2', dirX: -1, dirY:-1}, {
-                    playerId: 'blabla2',
-                    action: 'move',
-                    x: '11',
-                    y: '2', dirX: 1, dirY:0
-                }], missiles: []
-            },
-            {
-                players: [{playerId: 'blabla', action: 'move', x: '14', y: '19', dirX:1, dirY:-1}, {
-                    playerId: 'blabla2',
-                    action: 'move',
-                    x: '5',
-                    y: '5', dirX:-1, dirY:-1
-                }], missiles: []
-            },
-            {
-                players: [{playerId: 'blabla', action: 'move', x: '0', y: '16', dirX: -1, dirY:1}, {
-                    playerId: 'blabla2',
-                    action: 'move',
-                    x: '7',
-                    y: '0', dirX: 1, dirY:1
-                }], missiles: []
-            },
-            {
-                players: [{playerId: 'blabla', action: 'move', x: '0', y: '14', dirX: -1, dirY:1}, {
-                    playerId: 'blabla2',
-                    action: 'shoot',
-                    x: '7',
-                    y: '0', dirX:0, dirY:0
-                }], missiles: [{playerId: 'blabla2', missileId: '1', x: '7', y: '1', dirX:0, dirY:-1}]
-            },
-            {
-                players: [{playerId: 'blabla', action: 'move', x: '5', y: '12', dirX:1, dirY:1}, {
-                    playerId: 'blabla2',
-                    action: 'move',
-                    x: '0',
-                    y: '10', dirX:-1, dirY:-1
-                }], missiles: [{playerId: 'blabla2', missileId: '1', x: '5', y: '12', dirX:-1, dirY:-1}]
-            },
-            {players: [{playerId: 'blabla2', action: 'move', x: '7', y: '12', dirX:1, dirY:-1}], missiles: []},
-            {players: [{playerId: 'blabla2', action: 'move', x: '0', y: '0', dirX:-1, dirY:1}], missiles: []}];
-
-        var changeMap = false;
-        $scope.gameLength = events.length;
-        $interval(function () {
-            if ($scope.currentStep==0 && changeMap) {
-                var mapWidth = Math.floor(Math.random()*4)+18;
-                var mapHeight = Math.floor(Math.random()*4)+20;
-                $scope.map = {
-                    width: mapWidth,
-                    height: mapHeight,
-                    obstacles: [{type: '', x: 4, y: 9}, {type: '', x: 10, y: 7}, {type: '', x: 11, y: 7}, {
-                        type: '',
-                        x: 12,
-                        y: 7
-                    }]
-                };
-                $scope.gameLength = events.length;
-                changeMap = false;
-            } else {
-                //$scope.state = events[$scope.currentStep];
-                $scope.currentStep = (1 + $scope.currentStep) % events.length;
-                changeMap = true;
-            }
-        }, 1500);
 
     }
 ])
@@ -194,7 +194,7 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
                 var gameBorder = $scope.maximalBorder || 600, maximalWidth, maximalHeight;
                 var tileSize = 65;
                 var mapTileSize = 128;
-                var game, ratio, scale, scaledGrid, players, missiles, obstacles, mapScale, scaledMapGrid, leadGrid;
+                var game, ratio, scale, scaledGrid, players={}, missiles={}, obstacles, mapScale, scaledMapGrid, leadGrid;
 
                 var directionMap = {1: {"-1":135, 0 : 90, "1": 45},
                                 0: {"-1": 180, 0: undefined, "1": 0 },
@@ -280,13 +280,22 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
                     }
                 };
 
-                var removeOldItems = function (itemsSet, identifiers) {
+                var removeItems = function(itemsSet) {
                     for (var item in itemsSet) {
-                        if (itemsSet.hasOwnProperty(item) && identifiers.indexOf(item) === -1) {
-                            itemsSet[item].element.destroy();
-                            delete itemsSet[item];
-                        }
+                        console.log(item);
+                        itemsSet[item].element.destroy();
+                        delete itemsSet[item];
                     }
+                    return itemsSet;
+                };
+
+                var removeOldItems = function (itemsSet, identifiers) {
+                    //for (var item in itemsSet) {
+                    //    if (itemsSet.hasOwnProperty(item) && identifiers.indexOf(item) === -1) {
+                    //        itemsSet[item].element.destroy();
+                    //        delete itemsSet[item];
+                    //    }
+                    //}
                     return itemsSet;
                 };
 
@@ -396,7 +405,8 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
                         }
                         game.destroy();
                     }
-
+                    missiles = removeItems(missiles);
+                    players = removeItems(players);
                     var gridWidth = $scope.map["width"];
                     var gridHeight = $scope.map["height"];
                     var gameHeight, gameWidth;
@@ -444,9 +454,10 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
                     state['missiles'].forEach(function (state) {
                         if (!missiles.hasOwnProperty(state.missileId)) {
                             var missile_color;
-                            if (players.hasOwnProperty(state.playerId)) {
-                                missile_color = players[state.playerId].color;
-                                players[state.playerId].turnTurret(state.dirX, state.dirY);
+                            if (players.hasOwnProperty(state.tankId)) {
+                                missile_color = players[state.tankId].color;
+
+                                players[state.tankId].turnTurret(state.dirX, state.dirY);
                             }
                             else {
                                 missile_color = Phaser.Color.getRandomColor();
@@ -464,7 +475,7 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
                     }));
                 }
 
-                $scope.$watch('map', loadGame, true);
+                $scope.$watch('map', loadGame);
 
                 $scope.$watch('state', loadState);
 

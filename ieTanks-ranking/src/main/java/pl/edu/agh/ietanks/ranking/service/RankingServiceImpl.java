@@ -54,6 +54,8 @@ public class RankingServiceImpl implements RankingService {
 
         Ranking gameRanking = rankingCalculator.calculateRankingForGame(gameOptional.get());
         Ranking ranking = rankingsMerger.apply(rankingOptional.get(), gameRanking);
+        ranking.setRankingId(rankingId);
+
         rankingStorage.updateRanking(ranking);
     }
 }
