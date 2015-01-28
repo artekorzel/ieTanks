@@ -5,3 +5,6 @@ target/
 cachedir
 ieTanks-gameplay/cachedir
 bower_components/
+Thumbs.db
+jetty.bat
+python.bat

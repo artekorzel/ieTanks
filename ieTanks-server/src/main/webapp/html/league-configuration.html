@@ -1,0 +1,78 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label for="selectedNumberOfGames" class="control-label col-xs-4">Number of games</label>
+                    <div class="col-xs-3">
+                        <select id="selectedNumberOfGames"
+                                class="form-control"
+                                ng-model="selectedNumberOfGames">
+                            <option ng-repeat="numberOfGames in numberOfGamesOptions" value="{{$index+1}}">{{numberOfGames}}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="selectedIntervalCount" class="control-label col-xs-4">Match frequency</label>
+                    <div class="col-xs-3">
+                        <select id="selectedIntervalCount"
+                                class="form-control"
+                                ng-model="selectedIntervalCount">
+                            <option ng-repeat="intervalCount in intervalCountOptions" value="{{$index}}">{{intervalCount}}</option>
+                        </select>
+                    </div>
+                    <div class="col-xs-4">
+                        <select id="selectedIntervalPeriod"
+                                class="form-control"
+                                ng-model="selectedIntervalPeriod">
+                            <option ng-repeat="intervalPeriod in intervalPeriodOptions" value="{{intervalPeriod}}">{{intervalPeriod}}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="startDateTime" class="control-label col-xs-4">Start datetime</label>
+                    <div class="col-xs-6">
+                        <div class="input-group date" id="selectedStartDateTime" eonasdan-datetime-picker ng-model="selectedStartDateTime">
+                            <input type="text" class="form-control">
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                   <label for="selectedBoard" class="control-label col-xs-4">Board</label>
+                   <div class="col-xs-6">
+                        <div class="radio" ng-repeat="board in boardOptions">
+                            <label class="ellipsis">
+                                <input type="radio" ng-model="$parent.selectedBoard" name="selectedBoard" value="{{board.id}}">
+                                <span>{{board.id}}</span>
+                            </label>
+                            <span class="float-right"><span>{{board.max}}</span> max</span><!-- TODO: change {{board.max}} mapping to match backend interface -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                   <label for="selectedPlayers" class="control-label col-xs-4">Players</label>
+                   <div class="col-xs-6">
+                        <div class="input" ng-repeat="i in numberOfSelectedPlayers">
+                            <label class="control-label">
+                                <input type="text" class="form-control" ng-model="$parent.selectedPlayers[i]">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-offset-4 col-xs-8">
+                        <button type="submit" class="btn btn-default" ng-click="save()">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

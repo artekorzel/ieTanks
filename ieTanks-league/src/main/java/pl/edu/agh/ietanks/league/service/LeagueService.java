@@ -5,9 +5,9 @@ import lombok.extern.java.Log;
 import org.springframework.scheduling.TaskScheduler;
 import pl.edu.agh.ietanks.gameplay.game.api.GameId;
 import pl.edu.agh.ietanks.gameplay.game.api.GamePlay;
-import pl.edu.agh.ietanks.league.external.RankingId;
-import pl.edu.agh.ietanks.league.external.RankingService;
 import pl.edu.agh.ietanks.league.external.UserService;
+import pl.edu.agh.ietanks.ranking.api.RankingId;
+import pl.edu.agh.ietanks.ranking.api.RankingService;
 
 import java.time.ZonedDateTime;
 import java.util.Collection;

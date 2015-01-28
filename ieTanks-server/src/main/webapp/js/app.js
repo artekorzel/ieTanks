@@ -18,6 +18,10 @@ ieTanksApp.config(['$routeProvider',
                 templateUrl: 'html/game.html',
                 controller: 'GameCtrl'
             }).
+            when('/league-configuration', {
+                templateUrl: 'html/league-configuration.html',
+                controller: 'LeagueConfiguration'
+            }).
             when('/login', {
                 url: '/login',
                 templateUrl: 'html/login.html',

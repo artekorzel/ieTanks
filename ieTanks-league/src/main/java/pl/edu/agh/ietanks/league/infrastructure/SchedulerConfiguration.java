@@ -6,10 +6,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import pl.edu.agh.ietanks.gameplay.game.api.GamePlay;
-import pl.edu.agh.ietanks.league.external.RankingService;
 import pl.edu.agh.ietanks.league.external.UserService;
 import pl.edu.agh.ietanks.league.service.LeagueRepository;
 import pl.edu.agh.ietanks.league.service.LeagueService;
+import pl.edu.agh.ietanks.ranking.api.RankingService;
 
 @Configuration
 public class SchedulerConfiguration {
