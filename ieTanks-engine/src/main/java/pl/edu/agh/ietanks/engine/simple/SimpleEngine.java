@@ -2,52 +2,60 @@ package pl.edu.agh.ietanks.engine.simple;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import pl.edu.agh.ietanks.engine.api.Action;
-import pl.edu.agh.ietanks.engine.api.Board;
-import pl.edu.agh.ietanks.engine.api.Bot;
-import pl.edu.agh.ietanks.engine.api.Engine;
-import pl.edu.agh.ietanks.engine.api.MutableBoard;
+import pl.edu.agh.ietanks.engine.api.*;
 import pl.edu.agh.ietanks.engine.api.events.Event;
+import pl.edu.agh.ietanks.engine.api.events.RoundResults;
 
 import java.util.ArrayDeque;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Queue;
+import java.util.stream.Collectors;
 
+/**
+ * It's NOT thread safe. Do not share the same instance of SimpleEngine between different threads.
+ */
 public class SimpleEngine implements Engine {
+    private final TanksOrderPolicy orderPolicy = new RandomOrderPolicy();
+
     private GameLogic gameLogic;
-    private Map<Bot, Integer> botIds = new HashMap<>();
-    private Queue<Bot> turns = new ArrayDeque<>();
+    private GameFinishingPolicy finishingPolicy;
 
-    @Override
-    public void setup(MutableBoard initialBoard, List<Bot> bots) {
-        this.gameLogic = new GameLogic(initialBoard);
+    private final Queue<Bot> turns = new ArrayDeque<>();
 
-        int id = 0;
-        for(Bot bot : bots) {
-            turns.add(bot);
-            botIds.put(bot, id++);
-        }
+    SimpleEngine(BoardDefinition initialBoard, List<? extends Bot> bots, GameConfig configuration) {
+        final List<String> botIds = bots.stream().map(Bot::id).collect(Collectors.toList());
+        this.gameLogic = new GameLogic(initialBoard, botIds);
+
+        finishingPolicy = new CompositeFinishingPolicy(
+                new MaximumNumberOfTurns(configuration.turnsLimit()),
+                new LastBotLeft());
+
+        turns.addAll(orderPolicy.determineTurnsOrder(bots));
     }
 
     @Override
-    public List<Event> nextMove() {
+    public RoundResults nextMove() {
         Bot currentBot = turns.poll();
-        int botId = botIds.get(currentBot);
 
         List<Event> missileEvents = gameLogic.moveMissiles();
 
         Action proposedAction = currentBot.performAction(gameLogic.board());
-        List<Event> tankEvents = gameLogic.tryApplyAction(proposedAction, botId);
+        List<Event> tankEvents = gameLogic.tryApplyAction(proposedAction, currentBot.id());
 
         turns.add(currentBot);
+        final List<Event> turnEvents = Lists.newArrayList(Iterables.concat(missileEvents, tankEvents));
 
-        return Lists.newArrayList(Iterables.concat(missileEvents, tankEvents));
+        finishingPolicy.nextTurn(gameLogic.board(), turnEvents);
+
+        if (finishingPolicy.hasFinished()) {
+            return RoundResults.Finished(turnEvents);
+        } else {
+            return RoundResults.Continue(turnEvents);
+        }
     }
 
     @Override
-    public Board currentBoard() {
+    public GameplayBoardView currentBoard() {
         return gameLogic.board();
     }
 }

@@ -1,0 +1,8 @@
+<div class="list-group">
+    <a href="#" class="list-group-item disabled">
+        Select one of following finished games:
+    </a>
+    <span ng-repeat="game in gameHistory">
+        <a href="#/game/{{game.id}}" class="list-group-item">{{game.id}}</a>
+    </span>
+</div>

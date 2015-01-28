@@ -1,0 +1,46 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2">
+            <div class="row">
+                <div class="row">
+                    <h2><span class="col-md-offset-1 col-md-10 label label-default" ng-if="selectedGame.gameId">Game shown: {{selectedGame.gameId}}</span></h2>
+                    <h2><span class="col-md-offset-1 col-md-10 label label-default" ng-if="!selectedGame">Select game</span></h2>
+                </div>
+                <div class="list-group" style="max-height:600px; overflow-x: scroll">
+                    <!--<a class="list-group-item list-group-item-warning active">-->
+                        <!--<h4 class="list-group-item-heading" ng-if="selectedGame.gameId">Game shown: {{selectedGame.gameId}}</h4>-->
+                        <!--<h4 class="list-group-item-heading" ng-if="!selectedGame">Select game</h4>-->
+                    <!--</a>-->
+                    <a class="list-group-item" ng-repeat="game in games" ng-click="$parent.selected = game; $parent.selectedGame=game" ng-class="{active:selected==game}">{{game.gameId}}</a>
+                </div>
+            </div>
+            <div class="row container col-md-offset-1">
+                <form class="form-inline form-group-sm">
+                    <div class="input-group">
+                        <span class="input-group-addon">Border</span>
+                        <select class="form-control" ng-model="gameBorder" ng-options="size for size in sizes"></select>
+                        <span class="input-group-addon">px</span>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                <tank-game id="game-window" map="map" state="state" maximal-border="gameBorder"></tank-game>
+            </div>
+            <div ng-if="map && state" class="row col-md-offset-1 col-md-4">
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="changeStep(-10)"><i class="glyphicon glyphicon-fast-backward"></i></button>
+                        <button type="button" class="btn btn-default" ng-click="changeStep(-1)"><i class="glyphicon glyphicon-step-backward"></i></button>
+                    </span>
+                    <input type="text" class="form-control" ng-model="currentStep" style="min-width:50px">
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="changeStep(1)"><i class="glyphicon glyphicon-step-forward"></i></button>
+                        <button type="button" class="btn btn-default" ng-click="changeStep(10)"><i class="glyphicon glyphicon-fast-forward"></i></button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
