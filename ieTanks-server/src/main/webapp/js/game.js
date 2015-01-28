@@ -1,7 +1,7 @@
-var ieTanksVisualization = angular.module('ieTanksVisualization', []);
+var ieTanksVisualization = angular.module('ieTanksVisualization', ['ngTable']);
 
-ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParams', 'REST',
-    function ($scope, $interval, $routeParams, REST) {
+ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParams', 'REST', 'ngTableParams',
+    function ($scope, $interval, $routeParams, REST, ngTableParams) {
         var events = [];
         var intervalStepping = undefined;
         $scope.gameBorder = 600;
@@ -9,6 +9,8 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
         $scope.games = [];
         $scope.currentStep = 0;
         $scope.gameLength = 0;
+        $scope.gameStats = undefined;
+        $scope.tankStats = [];
 
         $scope.changeStep = function(amount) {
             if($scope.currentStep+amount>=$scope.gameLength) {
@@ -47,6 +49,13 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
                 }, function () {
                     console.log('Failed to load game events.');
                 });
+                var allGameStat = REST.stat.get({gameId: $scope.selectedGame.gameId }, function () {
+                    $scope.gameStats = allGameStat['gameStats'];
+                    $scope.tankStats = allGameStat['tanksStats'];
+
+                    $scope.tanksStatsTableParams.reload();
+                });
+
             }
         });
 
@@ -152,9 +161,27 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
         //        changeMap = true;
         //    }
         //}, 1500);
+        $scope.tanksStatsTableParams = new ngTableParams({
+            page: 1,            // show first page
+            count: 10           // count per page
+        }, {
+            total: function () { $scope.tankStats.length }, // length of data
+            getData: function($defer, params) {
+                $defer.resolve($scope.tankStats.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+            }
+        });
 
     }
 ])
+    .controller('GameHistory', ['$scope', '$interval', 'REST',
+        function ($scope, $interval, REST) {
+            var gameHistory = REST.games.query(function () {
+                $scope.gameHistory = gameHistory;
+            }, function () {
+                console.log('Failed to retrieve finished games list.');
+            });
+        }
+    ])
     .directive('tankGame', function () {
         return {
             scope: {
@@ -167,7 +194,7 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
                 var gameBorder = $scope.maximalBorder || 600, maximalWidth, maximalHeight;
                 var tileSize = 65;
                 var mapTileSize = 128;
-                var game, ratio, scale, scaledGrid, players, missiles, obstacles, mapScale, scaledMapGrid, leadGrid;
+                var game, ratio, scale, scaledGrid, players={}, missiles={}, obstacles, mapScale, scaledMapGrid, leadGrid;
 
                 var directionMap = {1: {"-1":135, 0 : 90, "1": 45},
                                 0: {"-1": 180, 0: undefined, "1": 0 },
@@ -251,6 +278,14 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
                         game.add.tween(this.turret)
                             .to({angle: newAngle}, 300, Phaser.Easing.Linear.InOut, true);
                     }
+                };
+
+                var removeItems = function(itemsSet) {
+                    for (var item in itemsSet) {
+                        itemsSet[item].element.destroy();
+                        delete itemsSet[item];
+                    }
+                    return itemsSet;
                 };
 
                 var removeOldItems = function (itemsSet, identifiers) {
@@ -369,7 +404,8 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
                         }
                         game.destroy();
                     }
-
+                    missiles = removeItems(missiles);
+                    players = removeItems(players);
                     var gridWidth = $scope.map["width"];
                     var gridHeight = $scope.map["height"];
                     var gameHeight, gameWidth;
@@ -438,7 +474,7 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
                     }));
                 }
 
-                $scope.$watch('map', loadGame, true);
+                $scope.$watch('map', loadGame);
 
                 $scope.$watch('state', loadState);
 

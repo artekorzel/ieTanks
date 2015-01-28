@@ -42,5 +42,34 @@
                 </div>
             </div>
         </div>
+        <div ng-show="selectedGame" class="col-md-3" >
+            <div class="row" >
+                <h1> Game stats </h1>
+                <table class="table">
+                    <tr>
+                        <td>Tank moves</td>
+                        <td>{{gameStats.tankMoves}}</td>
+                    </tr>
+                    <tr>
+                        <td>Shots</td>
+                        <td>{{gameStats.bulletsShot}}</td>
+                    </tr>
+                    <tr>
+                        <td>Rounds</td>
+                        <td>{{gameStats.roundsPlayed}}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="row" >
+                <h1> Tank stats </h1>
+                <table ng-table="tanksStatsTableParams" class="table">
+                    <tr ng-repeat="tank in $data">
+                        <td data-title="'TankId'">{{tank.tankId}}</td>
+                        <td data-title="'Shots'">{{tank.bulletsShot}}</td>
+                        <td data-title="'Moves'">{{tank.tankMoves}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
     </div>
 </div>

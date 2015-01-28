@@ -8,7 +8,8 @@ var ieTanksApp = angular.module('ieTanksApp', [
     'botsForm',
     'ngRoute',
     'ngResource',
-    'satellizer'
+    'satellizer',
+    'ngTable'
 ]); // add other modules if dependant here
 
 ieTanksApp.config(['$routeProvider',

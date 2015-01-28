@@ -14,7 +14,7 @@ public class BoardsRestController {
     @Autowired
     BoardsReader boardsReader;
 
-    @RequestMapping("/api/board")
+    @RequestMapping("/board")
     List<BoardPojo> getBoards() {
         return boardsReader.getBoards().stream().map(board -> new BoardPojo(board.getId())).collect(Collectors.toList());
     }
