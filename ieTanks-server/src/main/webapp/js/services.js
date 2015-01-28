@@ -4,7 +4,7 @@ ieTanksServices.factory('REST', ['$resource',
     function ($resource) {
         return {
             games:  $resource('/api/game'),             // GET
-            game:   $resource('/api/game/:gameId'),     // GET|POST
+            game:   $resource('/api/game/:gameId', {gameId:'@id'}),     // GET|POST
             bot:    $resource('/api/bot'),              // GET|POST
             leagues:$resource('/api/league'),           // GET|POST
             league: $resource('/api/league/:leagueId'), // GET

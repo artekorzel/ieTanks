@@ -47,10 +47,10 @@ class SampleBot(Bot):
     def calculate_attacked_fields(self, board):
         attacked_fields = []
         missiles = board.findMissiles()
-        for missile in missiles:
-            missile_future_position = missile.position().moveMissile(missile.direction(), missile.speed())
-            if board.isWithin(missile_future_position):
-                attacked_fields.append(missile_future_position)
+        # for missile in missiles:
+        #     missile_future_position = missile.position().moveMissile(missile.direction(), missile.speed())
+        #     if board.isWithin(missile_future_position):
+        #         attacked_fields.append(missile_future_position)
         return attacked_fields
 
     def should_i_run(self, my_position, attacked_fields):
