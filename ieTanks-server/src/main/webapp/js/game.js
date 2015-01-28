@@ -289,12 +289,12 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
                 };
 
                 var removeOldItems = function (itemsSet, identifiers) {
-                    //for (var item in itemsSet) {
-                    //    if (itemsSet.hasOwnProperty(item) && identifiers.indexOf(item) === -1) {
-                    //        itemsSet[item].element.destroy();
-                    //        delete itemsSet[item];
-                    //    }
-                    //}
+                    for (var item in itemsSet) {
+                        if (itemsSet.hasOwnProperty(item) && identifiers.indexOf(Number(item)) === -1) {
+                            itemsSet[item].element.destroy();
+                            delete itemsSet[item];
+                        }
+                    }
                     return itemsSet;
                 };
 
@@ -447,31 +447,35 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
                             players[state.playerId] = createPlayer(state.playerId, state.x, state.y);
                         }
                         players[state.playerId].moveTo(state.x, state.y, state.dirX, state.dirY);
-                    });
-
-
-                    state['missiles'].forEach(function (state) {
-                        if (!missiles.hasOwnProperty(state.missileId)) {
-                            var missile_color;
-                            if (players.hasOwnProperty(state.tankId)) {
-                                missile_color = players[state.tankId].color;
-
-                                players[state.tankId].turnTurret(state.dirX, state.dirY);
-                            }
-                            else {
-                                missile_color = Phaser.Color.getRandomColor();
-                            }
-                            missiles[state.missileId] = createMissile(state.missileId, state.x, state.y, missile_color);
+                        if(state.action=="destroyed") {
+                            players[state.playerId].element.destroy();
+                            delete players[state.playerId];
                         }
-                        missiles[state.missileId].moveTo(state.x, state.y, state.dirX, state.dirY);
                     });
+                    if(state['missiles'].length>0){
+                        state['missiles'].forEach(function (state) {
+                            if (!missiles.hasOwnProperty(state.missileId)) {
+                                var missile_color;
+                                if (players.hasOwnProperty(state.tankId)) {
+                                    missile_color = players[state.tankId].color;
 
-                    players = removeOldItems(players, state['players'].map(function (state) {
-                        return state.playerId;
-                    }));
-                    missiles = removeOldItems(missiles, state['missiles'].map(function (state) {
-                        return state.missileId;
-                    }));
+                                    players[state.tankId].turnTurret(state.dirX, state.dirY);
+                                }
+                                else {
+                                    missile_color = Phaser.Color.getRandomColor();
+                                }
+                                missiles[state.missileId] = createMissile(state.missileId, state.x, state.y, missile_color);
+                            }
+                            missiles[state.missileId].moveTo(state.x, state.y, state.dirX, state.dirY);
+                        });
+                        if(state.action=="destroyed") {
+                            missiles[state.missileId].element.destroy();
+                            delete missiles[state.missileId];
+                        }
+                        missiles = removeOldItems(missiles, state['missiles'].map(function (state) {
+                            return state.missileId;
+                        }));
+                    }
                 }
 
                 $scope.$watch('map', loadGame);
