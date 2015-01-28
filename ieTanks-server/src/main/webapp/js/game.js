@@ -426,9 +426,10 @@ ieTanksVisualization.controller('GameCtrl', ['$scope', '$interval', '$routeParam
                     state['missiles'].forEach(function (state) {
                         if (!missiles.hasOwnProperty(state.missileId)) {
                             var missile_color;
-                            if (players.hasOwnProperty(state.playerId)) {
-                                missile_color = players[state.playerId].color;
-                                players[state.playerId].turnTurret(state.dirX, state.dirY);
+                            if (players.hasOwnProperty(state.tankId)) {
+                                missile_color = players[state.tankId].color;
+
+                                players[state.tankId].turnTurret(state.dirX, state.dirY);
                             }
                             else {
                                 missile_color = Phaser.Color.getRandomColor();
