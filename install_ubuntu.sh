@@ -35,7 +35,7 @@ case $(id -u) in
                 update_system
         ;;
         *)
-                if [ "$1" -eq "firstrun" ]; then
+                if [ "$1" = "firstrun" ]; then
                         echo 'Installing required packages'
                         sudo $0
                 fi
