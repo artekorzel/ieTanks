@@ -1,74 +1,52 @@
 package pl.edu.agh.ietanks.engine.api.events;
 
-import pl.edu.agh.ietanks.engine.api.Board;
+import pl.edu.agh.ietanks.engine.api.Direction;
 import pl.edu.agh.ietanks.engine.api.Position;
-import pl.edu.agh.ietanks.engine.api.Board.Direction;
 
 /**
  * Indicates that a tank created a missile.
  */
-public class MissileCreated implements Event {
-	
-    private final Board.Direction direction;
-    private final int speed;
-    private final Position position;
-    
-	public MissileCreated(Position position, Direction direction, int speed) {
-		this.position = position;
-		this.direction = direction;
-		this.speed = speed;
-	}
+public class MissileCreated extends AbstractMissileEvent {
 
-	public Position position() {
-		return position;
-	}
 
-	public Board.Direction direction() {
-		return direction;
-	}
+    public MissileCreated(int id, String tankId, Position position, Direction direction, int speed) {
+        super(MissileAction.CREATED, id, tankId, position, direction, speed);
+    }
 
-	public int speed() {
-		return speed;
-	}
 
-	@Override
-	public String toString() {
-		return "MissileCreated {direction=" + direction + ", speed=" + speed
-				+ ", position=" + position + "}";
-	}
+    @Override
+    public String toString() {
+        return "MissileCreated {id=" + id +
+                ", tankId=" + tankId +
+                ", direction=" + direction + ", speed=" + speed
+                + ", position=" + position + "}";
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((direction == null) ? 0 : direction.hashCode());
-		result = prime * result
-				+ ((position == null) ? 0 : position.hashCode());
-		result = prime * result + speed;
-		return result;
-	}
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + (tankId != null ? tankId.hashCode() : 0);
+        result = 31 * result + (direction != null ? direction.hashCode() : 0);
+        result = 31 * result + speed;
+        result = 31 * result + (position != null ? position.hashCode() : 0);
+        return result;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		MissileCreated other = (MissileCreated) obj;
-		if (direction != other.direction)
-			return false;
-		if (position == null) {
-			if (other.position != null)
-				return false;
-		} else if (!position.equals(other.position))
-			return false;
-		if (speed != other.speed)
-			return false;
-		return true;
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MissileCreated that = (MissileCreated) o;
+
+        if (id != that.id) return false;
+        if (tankId != null ? !tankId.equals(that.tankId) : that.tankId != null) return false;
+        if (speed != that.speed) return false;
+        if (direction != that.direction) return false;
+        if (position != null ? !position.equals(that.position) : that.position != null) return false;
+
+        return true;
+    }
 
 
 }

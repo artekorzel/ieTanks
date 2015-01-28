@@ -1,31 +1,22 @@
 package pl.edu.agh.ietanks.engine.api.events;
 
-import pl.edu.agh.ietanks.engine.api.Board;
+
+import pl.edu.agh.ietanks.engine.api.Direction;
+import pl.edu.agh.ietanks.engine.api.Position;
 
 /**
  * Indicates that a tank has moved.
  */
-public class TankMoved implements Event {
-    private final int tankId;
-    private final Board.Direction direction;
+public class TankMoved extends AbstractTankEvent {
     private final int step;
 
-    public TankMoved(int tankId, Board.Direction direction, int step) {
-        this.tankId = tankId;
-        this.direction = direction;
+    public TankMoved(String tankId, Direction direction, int step, Position position) {
+        super(TankAction.MOVED, tankId, direction, position);
         this.step = step;
     }
 
-    public int tankId() {
-        return tankId;
-    }
-
-    public Board.Direction direction() {
-        return direction;
-    }
-    
     public int step() {
-    	return step;
+        return step;
     }
 
     @Override
@@ -33,33 +24,32 @@ public class TankMoved implements Event {
         return "TankMoved{" +
                 "tankId=" + tankId +
                 ", direction=" + direction +
+                ", position=" + position +
                 ", step=" + step +
                 '}';
     }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((direction == null) ? 0 : direction.hashCode());
-		result = prime * result + step;
-		result = prime * result + tankId;
-		return result;
-	}
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof TankMoved)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
 
         TankMoved tankMoved = (TankMoved) o;
 
-        if (tankId != tankMoved.tankId) return false;
-        if (direction != tankMoved.direction) return false;
         if (step != tankMoved.step) return false;
+        if (direction != tankMoved.direction) return false;
+        if (!position.equals(tankMoved.position)) return false;
+        if (tankId != null ? !tankId.equals(tankMoved.tankId) : tankMoved.tankId != null) return false;
 
         return true;
     }
 
+    @Override
+    public int hashCode() {
+        int result = tankId != null ? tankId.hashCode() : 0;
+        result = 31 * result + (direction != null ? direction.hashCode() : 0);
+        result = 31 * result + (position != null ? position.hashCode() : 0);
+        result = 31 * result + step;
+        return result;
+    }
 }
